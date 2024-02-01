@@ -1,3 +1,7 @@
+## 1.0.2
+
+* update screenshot
+
 ## 1.0.0
 
 * add android support
