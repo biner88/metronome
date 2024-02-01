@@ -5,7 +5,7 @@ homepage: https://github.com/biner88/metronome
 issue_tracker: https://github.com/biner88/metronome/issues
 screenshots:
   - description: 'metronome screenshots'
-    path: screenshot/home.png
+    path: screenshot/home1.png
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
