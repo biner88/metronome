@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'metronome_platform_interface.dart';
 
 class Metronome {
+  ///initialize the metronome
   Future<void> init(
     String mainPath, {
     String? accentedPath,
@@ -19,14 +20,17 @@ class Metronome {
     }
   }
 
+  ///play the metronome
   Future<void> play(double bpm) async {
     return MetronomePlatform.instance.play(bpm);
   }
 
+  ///pause the metronome
   Future<void> stop() async {
     return MetronomePlatform.instance.stop();
   }
 
+  ///get the volume of the metronome
   Future<double> getVolume() async {
     double? volume = await MetronomePlatform.instance.getVolume();
     if (volume != null) {
@@ -36,18 +40,22 @@ class Metronome {
     }
   }
 
+  ///set the volume of the metronome
   Future<void> setVolume(double volume) async {
     return MetronomePlatform.instance.setVolume(volume / 100.0);
   }
 
+  ///check if the metronome is playing
   Future<bool?> isPlaying() async {
     return MetronomePlatform.instance.isPlaying();
   }
 
+  ///set the audio file of the metronome
   Future<void> setAudioFile(String path) async {
     return MetronomePlatform.instance.setAudioFile(path);
   }
 
+  ///set the audio assets of the metronome
   Future<void> setAudioAssets(String mainPath) async {
     if (!PlatformUtils.isWeb) {
       String mainFile = await saveAudioAssetsToLocal(mainPath);
@@ -57,14 +65,17 @@ class Metronome {
     }
   }
 
+  ///set the bpm of the metronome
   Future<void> setBPM(double bpm) async {
     return MetronomePlatform.instance.setBPM(bpm);
   }
 
+  ///destroy the metronome
   Future<void> destroy() async {
     return MetronomePlatform.instance.destroy();
   }
 
+  ///save the audio assets to local
   Future<String> saveAudioAssetsToLocal(String mainPath) async {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.parent.parent.path;

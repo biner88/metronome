@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 
 class PlatformUtils {
   static bool _isWeb() {
-    // 通过kIsWeb变量判断是否为web环境!
     return kIsWeb == true;
   }
 
