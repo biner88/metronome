@@ -5,7 +5,7 @@
 Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio source settings.
 ##
 
-![Metronome](https://raw.githubusercontent.com/biner88/metronome/main/screenshot/home.png)
+![Metronome](https://raw.githubusercontent.com/biner88/metronome/main/screenshot/home1.png)
 
 ## Quick Start 
 
