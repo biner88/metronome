@@ -46,6 +46,7 @@ public class Metronome {
         setBPM(bpm);
         play = true;
         audioGenerator.createPlayer(context);
+        setVolume(volume);
         calcSilence();
         new Thread(() -> {
             do {

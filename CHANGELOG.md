@@ -1,3 +1,7 @@
+## 1.0.3
+
+* fix android volume control
+
 ## 1.0.2
 
 * update screenshot
