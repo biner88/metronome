@@ -26,11 +26,15 @@ public class AudioGenerator {
         audioTrack.play();
     }
     public void writeSound(short[] sound) {
-        audioTrack.write(sound, 0, sound.length);
+        if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED ) {
+            audioTrack.write(sound, 0, sound.length);
+        }
     }
 
     public void writeSound(short[] sound, final int length) {
-        audioTrack.write(sound, 0, length);
+        if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED ) {
+            audioTrack.write(sound, 0, length);
+        }
     }
     
     public void destroyAudioTrack() {

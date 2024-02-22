@@ -57,6 +57,18 @@ class MethodChannelMetronome extends MetronomePlatform {
   }
 
   @override
+  Future<void> pause() async {
+    try {
+      await methodChannel.invokeMethod<void>('pause');
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      // rethrow;
+    }
+  }
+
+  @override
   Future<void> stop() async {
     try {
       await methodChannel.invokeMethod<void>('stop');

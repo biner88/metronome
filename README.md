@@ -13,15 +13,19 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 
 ```dart
 final metronome = Metronome();
-double bpm = 120;
-double vol = 50;
-metronome.init('assets/audio/snare.wav', bpm: bpm, volume: vol);
+metronome.init('assets/audio/snare.wav', bpm: 120, volume: 50);
 ```
 
 ### Play
 
 ```dart
 metronome.play();
+```
+
+### Pause
+
+```dart
+metronome.pause();
 ```
 
 ### Stop

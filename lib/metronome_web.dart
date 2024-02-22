@@ -53,6 +53,11 @@ class MetronomeWeb extends MetronomePlatform {
   }
 
   @override
+  Future<void> pause() async {
+    stopm();
+  }
+
+  @override
   Future<void> stop() async {
     stopm();
   }

@@ -26,6 +26,11 @@ class Metronome {
   }
 
   ///pause the metronome
+  Future<void> pause() async {
+    return MetronomePlatform.instance.pause();
+  }
+
+  ///stop the metronome
   Future<void> stop() async {
     return MetronomePlatform.instance.stop();
   }

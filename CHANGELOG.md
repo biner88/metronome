@@ -1,3 +1,8 @@
+## 1.0.4
+
+* add pause() method
+* fix stop() method replace pause() method
+
 ## 1.0.3
 
 * fix android volume control

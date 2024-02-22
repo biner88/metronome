@@ -62,10 +62,13 @@ public class Metronome {
             } while (true);
         }).start();
     }
-
+    public void pause() {
+        play = false;
+        audioGenerator.getAudioTrack().pause();
+    }
     public void stop() {
         play = false;
-        audioGenerator.destroyAudioTrack();
+        audioGenerator.getAudioTrack().stop();
     }
     public float getVolume() {
         return volume;

@@ -81,7 +81,9 @@ class Metronome {
         self.audioPlayerNode.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
 
     }
-
+    func pause() {
+        audioPlayerNode.pause()
+    }
     func stop() {
         audioPlayerNode.stop()
     }

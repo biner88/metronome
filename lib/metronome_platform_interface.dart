@@ -35,6 +35,10 @@ abstract class MetronomePlatform extends PlatformInterface {
     throw UnimplementedError('play() has not been implemented.');
   }
 
+  Future<void> pause() {
+    throw UnimplementedError('pause() has not been implemented.');
+  }
+
   Future<void> stop() {
     throw UnimplementedError('stop() has not been implemented.');
   }

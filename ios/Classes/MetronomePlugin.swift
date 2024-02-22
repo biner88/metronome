@@ -21,6 +21,9 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
               let bpm: Double = (attributes?["bpm"] as? Double) ?? 120
                   metronome?.play(bpm: bpm)
                 break;
+              case "pause":
+                  metronome?.pause()
+                break;
               case "stop":
                   metronome?.stop()
                 break;

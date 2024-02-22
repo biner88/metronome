@@ -38,6 +38,9 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
         double bpm = call.argument("bpm");
         metronome.play(bpm);
         break;
+      case "pause":
+        metronome.pause();
+        break;
       case "stop":
         metronome.stop();
         break;
