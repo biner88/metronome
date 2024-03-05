@@ -7,6 +7,12 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 
 ![Metronome](https://raw.githubusercontent.com/biner88/metronome/main/screenshot/home1.png)
 
+## TODO
+
+* [ ] Add CallBack function on Tick
+* [ ] Add MacOS support
+* [ ] Add Windows support
+
 ## Quick Start 
 
 ### Init
