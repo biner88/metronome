@@ -25,13 +25,13 @@ abstract class MetronomePlatform extends PlatformInterface {
 
   Future<void> init(
     String mainPath, {
-    double bpm = 120.0,
-    double volume = 50.0,
+    int bpm = 120,
+    int volume = 50,
   }) {
     throw UnimplementedError('init() has not been implemented.');
   }
 
-  Future<void> play(double bpm) {
+  Future<void> play(int bpm) {
     throw UnimplementedError('play() has not been implemented.');
   }
 
@@ -43,11 +43,11 @@ abstract class MetronomePlatform extends PlatformInterface {
     throw UnimplementedError('stop() has not been implemented.');
   }
 
-  Future<double?> getVolume() {
+  Future<int?> getVolume() {
     throw UnimplementedError('getVolume() has not been implemented.');
   }
 
-  Future<void> setVolume(double volume) {
+  Future<void> setVolume(int volume) {
     throw UnimplementedError('setVolume() has not been implemented.');
   }
 
@@ -63,7 +63,7 @@ abstract class MetronomePlatform extends PlatformInterface {
     throw UnimplementedError('setAudioAssets() has not been implemented.');
   }
 
-  Future<void> setBPM(double bpm) {
+  Future<void> setBPM(int bpm) {
     throw UnimplementedError('setBPM() has not been implemented.');
   }
 

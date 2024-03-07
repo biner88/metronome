@@ -9,8 +9,8 @@ class Metronome {
   Future<void> init(
     String mainPath, {
     String? accentedPath,
-    double bpm = 120.0,
-    double volume = 50,
+    int bpm = 120,
+    int volume = 50,
   }) async {
     if (!PlatformUtils.isWeb) {
       String mainFile = await saveAudioAssetsToLocal(mainPath);
@@ -21,7 +21,7 @@ class Metronome {
   }
 
   ///play the metronome
-  Future<void> play(double bpm) async {
+  Future<void> play(int bpm) async {
     return MetronomePlatform.instance.play(bpm);
   }
 
@@ -36,18 +36,18 @@ class Metronome {
   }
 
   ///get the volume of the metronome
-  Future<double> getVolume() async {
-    double? volume = await MetronomePlatform.instance.getVolume();
+  Future<int> getVolume() async {
+    int? volume = await MetronomePlatform.instance.getVolume();
     if (volume != null) {
       return volume * 100;
     } else {
-      return 50.0;
+      return 50;
     }
   }
 
-  ///set the volume of the metronome
-  Future<void> setVolume(double volume) async {
-    return MetronomePlatform.instance.setVolume(volume / 100.0);
+  ///set the volume of the metronome (0-100)
+  Future<void> setVolume(int volume) async {
+    return MetronomePlatform.instance.setVolume(volume);
   }
 
   ///check if the metronome is playing
@@ -71,7 +71,7 @@ class Metronome {
   }
 
   ///set the bpm of the metronome
-  Future<void> setBPM(double bpm) async {
+  Future<void> setBPM(int bpm) async {
     return MetronomePlatform.instance.setBPM(bpm);
   }
 

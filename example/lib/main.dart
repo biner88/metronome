@@ -15,8 +15,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _metronomePlugin = Metronome();
   bool isplaying = false;
-  double bpm = 120;
-  double vol = 50;
+  int bpm = 120;
+  int vol = 50;
   @override
   void initState() {
     super.initState();
@@ -40,12 +40,12 @@ class _MyAppState extends State<MyApp> {
                 style: const TextStyle(fontSize: 20),
               ),
               Slider(
-                value: bpm,
+                value: bpm.toDouble(),
                 min: 30,
                 max: 300,
                 divisions: 270,
                 onChanged: (val) {
-                  bpm = val.roundToDouble();
+                  bpm = val.toInt();
                   _metronomePlugin.setBPM(bpm);
                   setState(() {});
                 },
@@ -55,12 +55,12 @@ class _MyAppState extends State<MyApp> {
                 style: const TextStyle(fontSize: 20),
               ),
               Slider(
-                value: vol,
+                value: vol.toDouble(),
                 min: 0,
                 max: 100,
                 divisions: 100,
                 onChanged: (val) {
-                  vol = val.roundToDouble();
+                  vol = val.toInt();
                   _metronomePlugin.setVolume(vol);
                   setState(() {});
                 },

@@ -11,25 +11,30 @@ class MethodChannelMetronome extends MetronomePlatform {
   @override
   Future<void> init(
     String mainPath, {
-    double bpm = 120.0,
-    double volume = 50.0,
+    int bpm = 120,
+    int volume = 50,
   }) async {
+    if (volume > 100 || volume < 0) {
+      throw Exception('Volume must be between 0 and 100');
+    }
+    if (bpm < 0) {
+      throw Exception('BPM must be greater than 0');
+    }
     try {
       await methodChannel.invokeMethod<void>('init', {
         'path': mainPath,
         'bpm': bpm,
-        'volume': volume,
+        'volume': volume / 100.0,
       });
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
   @override
-  Future<void> play(double bpm) async {
+  Future<void> play(int bpm) async {
     try {
       await methodChannel.invokeMethod<void>('play', {
         'bpm': bpm,
@@ -38,12 +43,14 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
   @override
-  Future<void> setBPM(double bpm) async {
+  Future<void> setBPM(int bpm) async {
+    if (bpm < 0) {
+      throw Exception('BPM must be greater than 0');
+    }
     try {
       await methodChannel.invokeMethod<void>('setBPM', {
         'bpm': bpm,
@@ -52,7 +59,6 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
@@ -64,7 +70,6 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
@@ -76,34 +81,35 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
   @override
-  Future<double?> getVolume() async {
+  Future<int?> getVolume() async {
     try {
-      return await methodChannel.invokeMethod<double>('getVolume');
+      return await methodChannel.invokeMethod<int>('getVolume');
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
+
       return 0;
     }
   }
 
   @override
-  Future<void> setVolume(double volume) async {
+  Future<void> setVolume(int volume) async {
+    if (volume > 100 || volume < 0) {
+      throw Exception('Volume must be between 0 and 100');
+    }
     try {
       await methodChannel.invokeMethod<void>('setVolume', {
-        'volume': volume,
+        'volume': volume / 100.0,
       });
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
@@ -115,7 +121,7 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
+
       return false;
     }
   }
@@ -130,7 +136,6 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
@@ -144,7 +149,6 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 
@@ -156,7 +160,6 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
-      // rethrow;
     }
   }
 }

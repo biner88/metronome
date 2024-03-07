@@ -8,19 +8,19 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'metronome_platform_interface.dart';
 
 @JS()
-external void initm(String mainPath, double bpm, double volume);
+external void initm(String mainPath, int bpm, int volume);
 @JS()
-external void playm(double bpm);
+external void playm(int bpm);
 @JS()
 external void stopm();
 @JS()
-external void setBPMm(double bpm);
+external void setBPMm(int bpm);
 @JS()
-external void setVolumem(double volume);
+external void setVolumem(int volume);
 @JS()
 external void setAudioFilem(String path);
 @JS()
-external double getVolumem();
+external int getVolumem();
 @JS()
 external bool isPlayingm();
 
@@ -36,9 +36,15 @@ class MetronomeWeb extends MetronomePlatform {
   @override
   Future<void> init(
     String mainPath, {
-    double bpm = 120.0,
-    double volume = 50,
+    int bpm = 120,
+    int volume = 50,
   }) async {
+    if (volume > 100 || volume < 0) {
+      throw Exception('Volume must be between 0 and 100');
+    }
+    if (bpm < 0) {
+      throw Exception('BPM must be greater than 0');
+    }
     initm(mainPath, bpm, volume);
   }
 
@@ -48,7 +54,7 @@ class MetronomeWeb extends MetronomePlatform {
   }
 
   @override
-  Future<void> play(double bpm) async {
+  Future<void> play(int bpm) async {
     playm(bpm);
   }
 
@@ -63,12 +69,12 @@ class MetronomeWeb extends MetronomePlatform {
   }
 
   @override
-  Future<double?> getVolume() async {
+  Future<int?> getVolume() async {
     return getVolumem();
   }
 
   @override
-  Future<void> setVolume(double volume) async {
+  Future<void> setVolume(int volume) async {
     setVolumem(volume);
   }
 
@@ -83,7 +89,7 @@ class MetronomeWeb extends MetronomePlatform {
   }
 
   @override
-  Future<void> setBPM(double bpm) async {
+  Future<void> setBPM(int bpm) async {
     setBPMm(bpm);
   }
 }
