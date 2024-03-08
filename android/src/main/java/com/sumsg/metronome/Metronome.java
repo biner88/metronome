@@ -14,7 +14,7 @@ public class Metronome {
     private short[] mTookSilenceSoundArray;
     private AudioGenerator.Sample mTook;
     private int mBeatDivisionSampleCount;
-    private float volume= (float) 1.0F;
+    private float volume= (float) 0.5F;
     private final Context context;
     public Metronome(Context ctx) {
         context = ctx;
@@ -70,8 +70,8 @@ public class Metronome {
         play = false;
         audioGenerator.getAudioTrack().stop();
     }
-    public float getVolume() {
-        return volume;
+    public int getVolume() {
+        return (int) (volume * 100);
     }
     public void setVolume(float val) {
         volume = val;
@@ -86,6 +86,9 @@ public class Metronome {
     public void setBPM(double bpm) {
         mBpm = bpm;
         calcSilence();
+    }
+    public double getBPM() {
+        return mBpm;
     }
     public boolean isPlaying() {
         return play;

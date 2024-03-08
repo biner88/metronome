@@ -16,6 +16,9 @@ class MethodChannelMetronome extends MetronomePlatform {
     int bpm = 120,
     int volume = 50,
   }) async {
+    if (mainPath == '') {
+      throw Exception('Main path cannot be empty');
+    }
     if (volume > 100 || volume < 0) {
       throw Exception('Volume must be between 0 and 100');
     }
@@ -143,6 +146,9 @@ class MethodChannelMetronome extends MetronomePlatform {
 
   @override
   Future<void> setAudioFile(String mainPath) async {
+    if (mainPath == '') {
+      throw Exception('Main path cannot be empty');
+    }
     try {
       await methodChannel.invokeMethod<void>('setAudioFile', {
         'path': mainPath,
@@ -156,6 +162,9 @@ class MethodChannelMetronome extends MetronomePlatform {
 
   @override
   Future<void> setAudioAssets(String mainPath) async {
+    if (mainPath == '') {
+      throw Exception('Main path cannot be empty');
+    }
     try {
       await methodChannel.invokeMethod<void>('setAudioAssets', {
         'path': mainPath,

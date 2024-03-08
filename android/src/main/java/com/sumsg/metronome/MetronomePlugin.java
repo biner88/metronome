@@ -30,9 +30,7 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     switch (call.method) {
       case "init":
-        metronomeInit(call.argument("path"));
-        setVolume(call.argument("volume"));
-        setBPM(call.argument("bpm"));
+        metronomeInit(call);
         break;
       case "play":
         double bpm = call.argument("bpm");
@@ -73,16 +71,17 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
   }
-  private void metronomeInit(String path){
-    if (!Objects.equals(path, "")){
+  private void metronomeInit(@NonNull MethodCall call){
+    if (!Objects.equals(call.argument("path"), "")){
       metronome = new Metronome(applicationContext);
-      metronome.setAudioFile(path);
+      metronome.setAudioFile(call.argument("path"));
+      setVolume(call.argument("volume"));
+      setBPM(call.argument("bpm"));
     }
   }
   private void setVolume(double volume){
     if (metronome!=null){
-      float _volume = (float) (volume);
-      metronome.setVolume(_volume);
+      metronome.setVolume((float) (volume));
     }
   }
   private void setBPM(double bpm){

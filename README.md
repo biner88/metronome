@@ -13,7 +13,7 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 * [ ] Add MacOS support
 * [ ] Add Windows support
 * [x] Add getBMP() function
-* [x] Fix getVolume()
+* [x] Fix IOS getVolume()
 * [x] Change volume type (double to int)
 * [x] Change bpm type (double to int)
 
@@ -51,10 +51,11 @@ metronome.getVolume();
 metronome.setVolume(50);
 ```
 
-### Set BPM
+### BPM
 
 ```dart
 metronome.setBPM(120); 
+metronome.getBPM(); 
 ```
 
 ### get Play state
@@ -73,6 +74,16 @@ metronome.setAudioFile('assets/audio/snare.wav');
 
 ```dart
 metronome.destroy();
+```
+
+### Tap callback
+
+```
+metronome.onListenTap((_) {
+  if (kDebugMode) {
+    print('tap');
+  }
+});
 ```
 
 ## About Web
