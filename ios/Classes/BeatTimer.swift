@@ -1,21 +1,19 @@
-//
-//  BeatTimer.swift
-//  metronome
-//
-//  Created by xsonic on 2024/3/7.
-//
-
 class BeatTimer {
+    private var eventTap: EventTapHandler?
     private var beatTimer : Timer? = nil {
        willSet {
            beatTimer?.invalidate()
        }
     }
-    func startBeatTimer(bpm: Double) {
-        stopBeatTimer()
-        guard self.beatTimer == nil else { return }
-        beatTimer = Timer.scheduledTimer(withTimeInterval: 60 / bpm, repeats: true) { timer in
-            print("tick1")
+    func startBeatTimer(bpm: Double,eventTapHandler: EventTapHandler) {
+        eventTap = eventTapHandler
+        let timerIntervallInSamples = 60 / bpm
+//        var now1 = Date().timeIntervalSince1970
+        beatTimer = Timer.scheduledTimer(withTimeInterval: timerIntervallInSamples, repeats: true) { timer in
+//            let now2 = Date().timeIntervalSince1970
+//            print("tick1:"+String(describing: timerIntervallInSamples)+",diff:"+String(describing: (now2-now1)))
+//            now1 = now2
+            self.eventTap?.send(res: true)
         }
     }
     func stopBeatTimer() {

@@ -1,24 +1,32 @@
 import Flutter
 import UIKit
-
 public class MetronomePlugin: NSObject, FlutterPlugin {
+    var channel:FlutterMethodChannel?
     var metronome:Metronome?
-
+    //
+    private let eventTapListener: EventTapHandler = EventTapHandler()
+    private var eventTap: FlutterEventChannel?
+    //
+    init(with registrar: FlutterPluginRegistrar) {}
+    //
     public static func register(with registrar: FlutterPluginRegistrar) {
-      let channel = FlutterMethodChannel(name: "metronome", binaryMessenger: registrar.messenger())
-      let instance = MetronomePlugin()
-      registrar.addMethodCallDelegate(instance, channel: channel)
+        let instance = MetronomePlugin(with: registrar)
+        instance.channel = FlutterMethodChannel(name: "metronome", binaryMessenger: registrar.messenger())
+
+        registrar.addApplicationDelegate(instance)
+        registrar.addMethodCallDelegate(instance, channel: instance.channel!)
+        //
+        instance.eventTap = FlutterEventChannel(name: "metronome_tap", binaryMessenger: registrar.messenger())
+        instance.eventTap?.setStreamHandler(instance.eventTapListener )
     }
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
           let attributes = call.arguments as? NSDictionary
           switch call.method {
               case "init":
                   metronomeInit(attributes: attributes)
-                  setVolume(attributes: attributes)
-                  setBPM(attributes: attributes)
                 break;
               case "play":
-              let bpm: Double = (attributes?["bpm"] as? Double) ?? 120
+              let bpm: Double = (attributes?["bpm"] as? Double) ?? (metronome?.audioBpm)!
                   metronome?.play(bpm: bpm)
                 break;
               case "pause":
@@ -39,6 +47,9 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
               case "setBPM":
                   setBPM(attributes: attributes)
                 break;
+              case "getBPM":
+                  result(Int(metronome?.getBPM ?? (metronome?.audioBpm)!) )
+                break;
               case "setAudioFile":
                   setAudioFile(attributes: attributes)
                 break;
@@ -51,7 +62,8 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         }
     }
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-      //  channel?.setMethodCallHandler(nil)
+       channel?.setMethodCallHandler(nil)
+       eventTap?.setStreamHandler(nil)
     }
     private func setBPM( attributes:NSDictionary?) {
         if metronome != nil {
@@ -63,7 +75,9 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         let mainFilePath: String = (attributes?["path"] as? String) ?? ""
         let mainFileUrl = URL(fileURLWithPath: mainFilePath);
         if mainFilePath != "" {
-            metronome =  Metronome( mainFile: mainFileUrl)
+            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl,eventTapHandler: eventTapListener)
+            setVolume(attributes: attributes)
+            setBPM(attributes: attributes)
         }
     }
     private func setAudioFile( attributes:NSDictionary?) {
@@ -78,8 +92,7 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     private func setVolume( attributes:NSDictionary?) {
         if metronome != nil {
             let volume: Double = (attributes?["volume"] as? Double) ?? 0.5
-            let volume1: Float = Float(volume)
-            metronome?.setVolume(vol: volume1)
+            metronome?.setVolume(vol: Float(volume))
         }
     }
 }

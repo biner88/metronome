@@ -2,27 +2,30 @@
 import AVFoundation
 
 class Metronome {
-    private var beatTimer:BeatTimer?
+    private var beatTimer:BeatTimer
     //
     private var audioPlayerNode: AVAudioPlayerNode
     private var audioFileMain: AVAudioFile
     private var audioEngine: AVAudioEngine
     private var mixerNode: AVAudioMixerNode
     //var
-    private var audioBpm: Double = 120
-//    private var beatTimer : Timer? = nil {
-//       willSet {
-//           beatTimer?.invalidate()
-//       }
-//    }
-
-    init(mainFile: URL) {
+    public var audioBpm: Double = 120
+    public var audioVolume: Float = 0.5
+    //
+    private var eventTap: EventTapHandler
+    
+    init(mainFile: URL,accentedFile: URL,eventTapHandler: EventTapHandler) {
+        beatTimer = BeatTimer()
+        eventTap = eventTapHandler
+        //
         audioFileMain = try! AVAudioFile(forReading: mainFile)
         audioPlayerNode = AVAudioPlayerNode()
         
         audioEngine = AVAudioEngine()
         audioEngine.attach(self.audioPlayerNode)
+        
         mixerNode = audioEngine.mainMixerNode
+        mixerNode.outputVolume = audioVolume
         
         audioEngine.connect(audioPlayerNode, to: mixerNode, format: audioFileMain.processingFormat)
         audioEngine.prepare()
@@ -84,40 +87,32 @@ class Metronome {
 
         self.audioPlayerNode.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
         //
-        beatTimer?.startBeatTimer(bpm: bpm)
-//        stopBeatTimer()
-//        guard self.beatTimer == nil else { return }
-//        let timerIntervallInSamples = 60 / bpm
-//        beatTimer = Timer.scheduledTimer(withTimeInterval: timerIntervallInSamples, repeats: true) { timer in
-//            print("tick1")
-//        }
+        beatTimer.startBeatTimer(bpm: bpm, eventTapHandler: eventTap)
     }
     func pause() {
         audioPlayerNode.pause()
-        beatTimer?.stopBeatTimer()
+        beatTimer.stopBeatTimer()
     }
     func stop() {
         audioPlayerNode.stop()
-        beatTimer?.stopBeatTimer()
+        beatTimer.stopBeatTimer()
     }
-//    func stopBeatTimer() {
-//        guard beatTimer != nil else { return }
-//        beatTimer?.invalidate()
-//        beatTimer = nil
-//    }
     func setBPM(bpm: Double) {
         audioBpm = bpm
         if audioPlayerNode.isPlaying {
-           play(bpm: self.audioBpm)
-       }
+            play(bpm: self.audioBpm)
+        }
     }
-    var getVolume: Float {
-        return audioPlayerNode.volume;
+    var getBPM: Double {
+        return audioBpm;
+    }
+    var getVolume: Int {
+        return Int(audioVolume * 100);
     }
     func setVolume(vol: Float) {
+        audioVolume = vol
         mixerNode.outputVolume = vol
     }
-    
     var isPlaying: Bool {
         return audioPlayerNode.isPlaying
     }
@@ -127,7 +122,7 @@ class Metronome {
         audioEngine.reset()
         audioEngine.stop()
         audioEngine.detach(audioPlayerNode)
-        beatTimer?.stopBeatTimer()
+        beatTimer.stopBeatTimer()
     }
     func setAudioFile(mainFile: URL) {
         audioFileMain = try! AVAudioFile(forReading: mainFile)
