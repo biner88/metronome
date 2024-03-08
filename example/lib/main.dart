@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:metronome/metronome.dart';
 
@@ -20,7 +21,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _metronomePlugin.init('assets/audio/sound3.wav', bpm: bpm, volume: vol);
+    _metronomePlugin.init('assets/audio/snare.wav', bpm: bpm, volume: vol);
+    _metronomePlugin.onListenTap((_) {
+      if (kDebugMode) {
+        print('tap');
+      }
+    });
   }
 
   @override
@@ -51,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
               Text(
-                'Volume:$vol',
+                'Volume:$vol%',
                 style: const TextStyle(fontSize: 20),
               ),
               Slider(
@@ -101,7 +107,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             if (isplaying) {
               _metronomePlugin.pause();
               isplaying = false;
@@ -110,6 +116,10 @@ class _MyAppState extends State<MyApp> {
               _metronomePlugin.play(bpm);
               isplaying = true;
             }
+            // int? bpm2 = await _metronomePlugin.getBPM();
+            // print(bpm2);
+            // int? vol2 = await _metronomePlugin.getVolume();
+            // print(vol2);
             setState(() {});
           },
           child: Icon(isplaying ? Icons.pause : Icons.play_arrow),

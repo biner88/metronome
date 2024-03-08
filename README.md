@@ -12,9 +12,10 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 * [ ] Add CallBack function on Tick
 * [ ] Add MacOS support
 * [ ] Add Windows support
-* [ ] Add getBMP function
-* [x] change volume type (double to int)
-* [x] change bmp type (double to int)
+* [x] Add getBMP() function
+* [x] Fix getVolume()
+* [x] Change volume type (double to int)
+* [x] Change bpm type (double to int)
 
 ## Quick Start 
 

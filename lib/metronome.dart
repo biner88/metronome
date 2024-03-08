@@ -38,11 +38,7 @@ class Metronome {
   ///get the volume of the metronome
   Future<int> getVolume() async {
     int? volume = await MetronomePlatform.instance.getVolume();
-    if (volume != null) {
-      return volume * 100;
-    } else {
-      return 50;
-    }
+    return volume ?? 50;
   }
 
   ///set the volume of the metronome (0-100)
@@ -75,6 +71,12 @@ class Metronome {
     return MetronomePlatform.instance.setBPM(bpm);
   }
 
+  ///get the bpm of the metronome
+  Future<int> getBPM() async {
+    int? bpm = await MetronomePlatform.instance.getBPM();
+    return bpm ?? 120;
+  }
+
   ///destroy the metronome
   Future<void> destroy() async {
     return MetronomePlatform.instance.destroy();
@@ -98,5 +100,10 @@ class Metronome {
           mainByteData.offsetInBytes, mainByteData.lengthInBytes));
     }
     return mainFile.path;
+  }
+
+  ///CallBack function on Tick
+  void onListenTap(onEvent) {
+    MetronomePlatform.instance.onListenTap(onEvent);
   }
 }

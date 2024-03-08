@@ -67,6 +67,10 @@ abstract class MetronomePlatform extends PlatformInterface {
     throw UnimplementedError('setBPM() has not been implemented.');
   }
 
+  Future<int?> getBPM() {
+    throw UnimplementedError('getBPM() has not been implemented.');
+  }
+
   Future<void> saveAudioAssetsToLocal(String mainPath) {
     throw UnimplementedError(
         'saveAudioAssetsToLocal() has not been implemented.');
@@ -74,5 +78,9 @@ abstract class MetronomePlatform extends PlatformInterface {
 
   Future<void> destroy() {
     throw UnimplementedError('destroy() has not been implemented.');
+  }
+
+  void onListenTap(onEvent) {
+    throw UnimplementedError('onListenTap() has not been implemented.');
   }
 }

@@ -8,6 +8,8 @@ class MethodChannelMetronome extends MetronomePlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('metronome');
+  final eventTapChannel = const EventChannel("metronome_tap");
+
   @override
   Future<void> init(
     String mainPath, {
@@ -47,22 +49,6 @@ class MethodChannelMetronome extends MetronomePlatform {
   }
 
   @override
-  Future<void> setBPM(int bpm) async {
-    if (bpm < 0) {
-      throw Exception('BPM must be greater than 0');
-    }
-    try {
-      await methodChannel.invokeMethod<void>('setBPM', {
-        'bpm': bpm,
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-  }
-
-  @override
   Future<void> pause() async {
     try {
       await methodChannel.invokeMethod<void>('pause');
@@ -81,6 +67,35 @@ class MethodChannelMetronome extends MetronomePlatform {
       if (kDebugMode) {
         print(e);
       }
+    }
+  }
+
+  @override
+  Future<void> setBPM(int bpm) async {
+    if (bpm < 0) {
+      throw Exception('BPM must be greater than 0');
+    }
+    try {
+      await methodChannel.invokeMethod<void>('setBPM', {
+        'bpm': bpm,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  @override
+  Future<int?> getBPM() async {
+    try {
+      return await methodChannel.invokeMethod<int>('getBPM');
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+
+      return 0;
     }
   }
 
@@ -161,5 +176,10 @@ class MethodChannelMetronome extends MetronomePlatform {
         print(e);
       }
     }
+  }
+
+  @override
+  void onListenTap(onEvent) {
+    eventTapChannel.receiveBroadcastStream().listen(onEvent);
   }
 }
