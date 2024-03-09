@@ -122,7 +122,7 @@ class MethodChannelMetronome extends MetronomePlatform {
     }
     try {
       await methodChannel.invokeMethod<void>('setVolume', {
-        'volume': volume / 100.0,
+        'volume': volume / 100,
       });
     } catch (e) {
       if (kDebugMode) {

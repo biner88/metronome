@@ -9,7 +9,7 @@ class Metronome {
     private var audioEngine: AVAudioEngine
     private var mixerNode: AVAudioMixerNode
     //var
-    public var audioBpm: Double = 120
+    public var audioBpm: Int = 120
     public var audioVolume: Float = 0.5
     //
     private var eventTap: EventTapHandler
@@ -49,10 +49,10 @@ class Metronome {
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
 
-    private func generateBuffer(bpm: Double) -> AVAudioPCMBuffer {
+    private func generateBuffer(bpm: Int) -> AVAudioPCMBuffer {
 
         audioFileMain.framePosition = 0
-        let beatLength = AVAudioFrameCount(audioFileMain.processingFormat.sampleRate * 60 / bpm)
+        let beatLength = AVAudioFrameCount(audioFileMain.processingFormat.sampleRate * 60 / Double(bpm) )
         let bufferMainClick = AVAudioPCMBuffer(pcmFormat: audioFileMain.processingFormat,
                                                frameCapacity: beatLength)!
         try! audioFileMain.read(into: bufferMainClick)
@@ -75,7 +75,7 @@ class Metronome {
                                                    count: channelCount * Int(bufferBar.frameLength))
         return bufferBar
     }
-    func play(bpm: Double) {
+    func play(bpm: Int) {
         audioBpm = bpm
         let buffer = generateBuffer(bpm: bpm)
 
@@ -97,13 +97,13 @@ class Metronome {
         audioPlayerNode.stop()
         beatTimer.stopBeatTimer()
     }
-    func setBPM(bpm: Double) {
+    func setBPM(bpm: Int) {
         audioBpm = bpm
         if audioPlayerNode.isPlaying {
             play(bpm: self.audioBpm)
         }
     }
-    var getBPM: Double {
+    var getBPM: Int {
         return audioBpm;
     }
     var getVolume: Int {

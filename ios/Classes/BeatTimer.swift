@@ -5,9 +5,9 @@ class BeatTimer {
            beatTimer?.invalidate()
        }
     }
-    func startBeatTimer(bpm: Double,eventTapHandler: EventTapHandler) {
+    func startBeatTimer(bpm: Int,eventTapHandler: EventTapHandler) {
         eventTap = eventTapHandler
-        let timerIntervallInSamples = 60 / bpm
+        let timerIntervallInSamples = 60 / Double(bpm)
 //        var now1 = Date().timeIntervalSince1970
         beatTimer = Timer.scheduledTimer(withTimeInterval: timerIntervallInSamples, repeats: true) { timer in
 //            let now2 = Date().timeIntervalSince1970

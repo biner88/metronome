@@ -3,6 +3,7 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.os.Build;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -23,6 +24,9 @@ public class AudioGenerator {
                 sampleRate, AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT, sampleRate,
                 AudioTrack.MODE_STREAM);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            audioTrack.setVolume(0.5F);
+        }
         audioTrack.play();
     }
     public void writeSound(short[] sound) {

@@ -26,7 +26,7 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
                   metronomeInit(attributes: attributes)
                 break;
               case "play":
-              let bpm: Double = (attributes?["bpm"] as? Double) ?? (metronome?.audioBpm)!
+              let bpm: Int = (attributes?["bpm"] as? Int) ?? (metronome?.audioBpm)!
                   metronome?.play(bpm: bpm)
                 break;
               case "pause":
@@ -48,7 +48,7 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
                   setBPM(attributes: attributes)
                 break;
               case "getBPM":
-                  result(Int(metronome?.getBPM ?? (metronome?.audioBpm)!) )
+                  result(metronome?.getBPM ?? (metronome?.audioBpm)! )
                 break;
               case "setAudioFile":
                   setAudioFile(attributes: attributes)
@@ -67,7 +67,7 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     }
     private func setBPM( attributes:NSDictionary?) {
         if metronome != nil {
-            let bpm: Double = (attributes?["bpm"] as? Double) ?? 120
+            let bpm: Int = (attributes?["bpm"] as? Int) ?? 120
             metronome?.setBPM(bpm: bpm)
         }
     }

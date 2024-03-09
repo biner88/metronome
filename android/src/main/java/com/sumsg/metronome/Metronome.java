@@ -7,14 +7,14 @@ import android.util.Log;
 public class Metronome {
 
     private final Object mLock = new Object();
-    private double mBpm = 120;
+    private int mBpm = 120;
     private static final int SAMPLE_RATE = 44100;
     private boolean play = false;
     private final AudioGenerator audioGenerator = new AudioGenerator(SAMPLE_RATE);
     private short[] mTookSilenceSoundArray;
     private AudioGenerator.Sample mTook;
     private int mBeatDivisionSampleCount;
-    private float volume= (float) 0.5F;
+    private float volume= (float) 0.5;
     private final Context context;
     public Metronome(Context ctx) {
         context = ctx;
@@ -26,8 +26,7 @@ public class Metronome {
 
     public void calcSilence() {
         //(beats per second * SAMPLE_RATE) - NumberOfSamples
-        mBeatDivisionSampleCount = (int) (((60 / mBpm) * SAMPLE_RATE));
-
+        mBeatDivisionSampleCount = (int) (((60 / (float) mBpm) * SAMPLE_RATE));
         int silence = Math.max(mBeatDivisionSampleCount - mTook.getSampleCount(), 0);
         mTookSilenceSoundArray = new short[silence];
 
@@ -41,7 +40,7 @@ public class Metronome {
         }
     }
 
-    public void play(double bpm) {
+    public void play(int bpm) {
         isInitialized();
         setBPM(bpm);
         play = true;
@@ -50,40 +49,43 @@ public class Metronome {
         calcSilence();
         new Thread(() -> {
             do {
-
                 short[] sample = (short[]) mTook.getSample();
                 audioGenerator.writeSound(sample, Math.min(sample.length, mBeatDivisionSampleCount));
                 audioGenerator.writeSound(mTookSilenceSoundArray);
-
                 synchronized (mLock) {
                     if (!play) return;
                 }
-
             } while (true);
         }).start();
     }
     public void pause() {
-        play = false;
-        audioGenerator.getAudioTrack().pause();
+        if (audioGenerator.getAudioTrack()!=null){
+            play = false;
+            audioGenerator.getAudioTrack().pause();
+        }
     }
     public void stop() {
-        play = false;
-        audioGenerator.getAudioTrack().stop();
+        if (audioGenerator.getAudioTrack()!=null){
+            play = false;
+            audioGenerator.getAudioTrack().stop();
+        }
     }
     public int getVolume() {
         return (int) (volume * 100);
     }
     public void setVolume(float val) {
-        volume = val;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
-            try {
-                audioGenerator.getAudioTrack().setVolume(val);
-            }catch(Exception e) {
-                // Log.e("setVolume", String.valueOf(e));
+        if (audioGenerator.getAudioTrack()!=null){
+            volume = val;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
+                try {
+                    audioGenerator.getAudioTrack().setVolume(volume);
+                }catch(Exception e) {
+                    Log.e("setVolume", String.valueOf(e));
+                }
             }
         }
     }
-    public void setBPM(double bpm) {
+    public void setBPM(int bpm) {
         mBpm = bpm;
         calcSilence();
     }
