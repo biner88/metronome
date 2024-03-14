@@ -27,7 +27,6 @@ abstract class MetronomePlatform extends PlatformInterface {
     String mainPath, {
     int bpm = 120,
     int volume = 50,
-    bool enableTapCallback = false,
   }) {
     throw UnimplementedError('init() has not been implemented.');
   }

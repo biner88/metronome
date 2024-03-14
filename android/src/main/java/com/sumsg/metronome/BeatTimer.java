@@ -9,13 +9,10 @@ public class BeatTimer {
     private final EventChannel.EventSink eventTapSink;
     private Handler handler;
     private Runnable beatRunnable;
-    private final boolean enable;
-    BeatTimer(EventChannel.EventSink _eventTapSink,boolean _enable){
+    BeatTimer(EventChannel.EventSink _eventTapSink){
         eventTapSink = _eventTapSink;
-        enable = _enable;
     }
     public void startBeatTimer(int bpm) {
-        if (!enable) return;
         stopBeatTimer();
         handler = new Handler(Looper.getMainLooper());
         double timerIntervalInSamples = 60 / (double) bpm;

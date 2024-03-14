@@ -1,10 +1,8 @@
 class BeatTimer {
     private var eventTap: EventTapHandler
-    private var enableTapCallback:Bool
     
-    init(eventTap: EventTapHandler, _enableTapCallback: Bool = false) {
+    init(eventTap: EventTapHandler) {
         self.eventTap = eventTap
-        self.enableTapCallback = _enableTapCallback
     }
     private var beatTimer : Timer? = nil {
        willSet {
@@ -12,7 +10,6 @@ class BeatTimer {
        }
     }
     func startBeatTimer(bpm: Int) {
-        if (!self.enableTapCallback) {return}
         stopBeatTimer()
         let timerIntervallInSamples = 60 / Double(bpm)
 //        var now1 = Date().timeIntervalSince1970

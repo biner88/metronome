@@ -2,7 +2,7 @@
 import AVFoundation
 
 class Metronome {
-    private var beatTimer:BeatTimer
+    private var beatTimer:BeatTimer?
     //
     private var audioPlayerNode: AVAudioPlayerNode
     private var audioFileMain: AVAudioFile
@@ -13,8 +13,7 @@ class Metronome {
     public var audioVolume: Float = 0.5
     //
     
-    init(mainFile: URL,accentedFile: URL,_eventTapSink: EventTapHandler,enableTapCallback: Bool) {
-        beatTimer = BeatTimer(eventTap: _eventTapSink,_enableTapCallback: enableTapCallback)
+    init(mainFile: URL,accentedFile: URL) {
         //
         audioFileMain = try! AVAudioFile(forReading: mainFile)
         audioPlayerNode = AVAudioPlayerNode()
@@ -46,7 +45,9 @@ class Metronome {
         }
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
-
+    public func enableTapCallback(_eventTapSink: EventTapHandler) {
+       beatTimer = BeatTimer(eventTap: _eventTapSink)
+    }
     private func generateBuffer(bpm: Int) -> AVAudioPCMBuffer {
 
         audioFileMain.framePosition = 0
@@ -85,20 +86,29 @@ class Metronome {
 
         self.audioPlayerNode.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
         //
-        beatTimer.startBeatTimer(bpm: bpm)
+        if(beatTimer != nil){
+            beatTimer?.startBeatTimer(bpm: bpm)
+        }
     }
     func pause() {
         audioPlayerNode.pause()
-        beatTimer.stopBeatTimer()
+        if(beatTimer != nil){
+            beatTimer?.stopBeatTimer()
+        }
     }
     func stop() {
         audioPlayerNode.stop()
-        beatTimer.stopBeatTimer()
+        if(beatTimer != nil){
+            beatTimer?.stopBeatTimer()
+        }
     }
     func setBPM(bpm: Int) {
         audioBpm = bpm
         if audioPlayerNode.isPlaying {
             play(bpm: self.audioBpm)
+            if(beatTimer != nil){
+                beatTimer?.startBeatTimer(bpm: bpm)
+            }
         }
     }
     var getBPM: Int {
@@ -120,7 +130,9 @@ class Metronome {
         audioEngine.reset()
         audioEngine.stop()
         audioEngine.detach(audioPlayerNode)
-        beatTimer.stopBeatTimer()
+        if(beatTimer != nil){
+            beatTimer?.stopBeatTimer()
+        }
     }
     func setAudioFile(mainFile: URL) {
         audioFileMain = try! AVAudioFile(forReading: mainFile)

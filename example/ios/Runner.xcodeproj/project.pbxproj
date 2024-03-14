@@ -105,7 +105,6 @@
 				C2D002BDEB6AB6928E332FA5 /* Pods-RunnerTests.release.xcconfig */,
 				7C2C6D46522D8D69BED92078 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -321,7 +320,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n#xattr -cr ~/Library/Developer/Xcode/DerivedData || echo Clear\n";
 		};
 		DDBE7B1063720F4A979044EF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -15,7 +15,6 @@ class MethodChannelMetronome extends MetronomePlatform {
     String mainPath, {
     int bpm = 120,
     int volume = 50,
-    bool enableTapCallback = false,
   }) async {
     if (mainPath == '') {
       throw Exception('Main path cannot be empty');
@@ -31,7 +30,6 @@ class MethodChannelMetronome extends MetronomePlatform {
         'path': mainPath,
         'bpm': bpm,
         'volume': volume / 100.0,
-        'enableTapCallback': enableTapCallback,
       });
     } catch (e) {
       if (kDebugMode) {
@@ -42,6 +40,9 @@ class MethodChannelMetronome extends MetronomePlatform {
 
   @override
   Future<void> play(int bpm) async {
+    if (bpm < 0) {
+      throw Exception('BPM must be greater than 0');
+    }
     try {
       await methodChannel.invokeMethod<void>('play', {
         'bpm': bpm,
@@ -191,6 +192,7 @@ class MethodChannelMetronome extends MetronomePlatform {
 
   @override
   void onListenTap(onEvent) {
+    methodChannel.invokeMethod<void>('enableTapCallback');
     eventTapChannel.receiveBroadcastStream().listen(onEvent);
   }
 }

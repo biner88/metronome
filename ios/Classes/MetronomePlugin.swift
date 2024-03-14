@@ -6,6 +6,7 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     //
     private let eventTapListener: EventTapHandler = EventTapHandler()
     private var eventTap: FlutterEventChannel?
+    private var enableTapCallback:Bool = false
     //
     init(with registrar: FlutterPluginRegistrar) {}
     //
@@ -56,6 +57,9 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
               case "destroy":
                   metronome?.destroy()
                 break;
+              case "enableTapCallback":
+                enableTapCallback = true;
+                break;
               default:
                   result("unkown")
                 break;
@@ -75,8 +79,10 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         let mainFilePath: String = (attributes?["path"] as? String) ?? ""
         let mainFileUrl = URL(fileURLWithPath: mainFilePath);
         if mainFilePath != "" {
-            let _enableTapCallback:Bool = (attributes?["enableTapCallback"] as? Bool) ?? false
-            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl,_eventTapSink: eventTapListener,enableTapCallback: _enableTapCallback)
+            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl)
+            if(enableTapCallback){
+                metronome?.enableTapCallback(_eventTapSink: eventTapListener);
+            }
             setVolume(attributes: attributes)
             setBPM(attributes: attributes)
         }

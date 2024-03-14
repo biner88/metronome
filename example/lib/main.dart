@@ -28,7 +28,6 @@ class _MyAppState extends State<MyApp> {
       'assets/audio/snare.wav',
       bpm: bpm,
       volume: vol,
-      enableTapCallback: true,
     );
     _metronomePlugin.onListenTap((_) {
       if (kDebugMode) {
@@ -70,9 +69,11 @@ class _MyAppState extends State<MyApp> {
                 min: 30,
                 max: 300,
                 divisions: 270,
+                onChangeEnd: (val) {
+                  _metronomePlugin.setBPM(bpm);
+                },
                 onChanged: (val) {
                   bpm = val.toInt();
-                  _metronomePlugin.setBPM(bpm);
                   setState(() {});
                 },
               ),
@@ -85,9 +86,11 @@ class _MyAppState extends State<MyApp> {
                 min: 0,
                 max: 100,
                 divisions: 100,
+                onChangeEnd: (val) {
+                  _metronomePlugin.setVolume(vol);
+                },
                 onChanged: (val) {
                   vol = val.toInt();
-                  _metronomePlugin.setVolume(vol);
                   setState(() {});
                 },
               ),

@@ -17,16 +17,19 @@ public class Metronome {
     private int mBeatDivisionSampleCount;
     private float volume= (float) 0.5;
     private final Context context;
-    private final BeatTimer beatTimer;
-    public Metronome(Context ctx,EventChannel.EventSink _eventTapSink,boolean enableTapCallback) {
+    private BeatTimer beatTimer;
+
+    public Metronome(Context ctx,String mainFile) {
         context = ctx;
-        beatTimer = new BeatTimer(_eventTapSink,enableTapCallback);
+        setAudioFile(mainFile);
     }
 
     public void setAudioFile(String path) {
         mTook = AudioGenerator.loadSampleFromWav(path);
     }
-
+    public void enableTapCallback(EventChannel.EventSink _eventTapSink) {
+        beatTimer = new BeatTimer(_eventTapSink);
+    }
     public void calcSilence() {
         //(beats per second * SAMPLE_RATE) - NumberOfSamples
         mBeatDivisionSampleCount = (int) (((60 / (float) mBpm) * SAMPLE_RATE));
@@ -61,12 +64,16 @@ public class Metronome {
             } while (true);
         }).start();
         //
-        beatTimer.startBeatTimer(bpm);
+        if (beatTimer!=null){
+            beatTimer.startBeatTimer(bpm);
+        }
     }
     public void pause() {
         if (audioGenerator.getAudioTrack()!=null){
             play = false;
             audioGenerator.getAudioTrack().pause();
+        }
+        if (beatTimer!=null) {
             beatTimer.stopBeatTimer();
         }
     }
@@ -74,6 +81,8 @@ public class Metronome {
         if (audioGenerator.getAudioTrack()!=null){
             play = false;
             audioGenerator.getAudioTrack().stop();
+        }
+        if (beatTimer!=null) {
             beatTimer.stopBeatTimer();
         }
     }
@@ -95,7 +104,11 @@ public class Metronome {
     public void setBPM(int bpm) {
         mBpm = bpm;
         calcSilence();
-        beatTimer.startBeatTimer(bpm);
+        if (play){
+            if (beatTimer!=null) {
+                beatTimer.startBeatTimer(bpm);
+            }
+        }
     }
     public double getBPM() {
         return mBpm;
@@ -104,6 +117,9 @@ public class Metronome {
         return play;
     }
     public void destroy() {
+        if (beatTimer!=null) {
+            beatTimer.stopBeatTimer();
+        }
         if (!play) return;
         stop();
         synchronized (mLock) {

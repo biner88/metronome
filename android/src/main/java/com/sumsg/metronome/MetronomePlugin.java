@@ -25,6 +25,7 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   /// Metronome
   private Metronome metronome;
   private Context context;
+  private boolean enableTapCallback = false;
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "metronome");
@@ -83,7 +84,9 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
       case "destroy":
         metronome.destroy();
         break;
-
+      case "enableTapCallback":
+        enableTapCallback = true;
+        break;
       default:
         result.notImplemented();
         break;
@@ -99,11 +102,13 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   }
   private void metronomeInit(@NonNull MethodCall call){
     if (!Objects.equals(call.argument("path"), "")){
-      boolean _enableTapCallback = call.argument("enableTapCallback");
-      metronome = new Metronome(context,eventTapSink,_enableTapCallback);
-      setBPM(call);
-      setAudioFile(call);
+      String _mainFilePath = call.argument("path");
+      metronome = new Metronome(context,_mainFilePath);
+      if (enableTapCallback) {
+        metronome.enableTapCallback(eventTapSink);
+      }
       setVolume(call);
+      setBPM(call);
     }
   }
   private void setVolume(@NonNull MethodCall call){
