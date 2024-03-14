@@ -29,18 +29,18 @@ class _MyAppState extends State<MyApp> {
       bpm: bpm,
       volume: vol,
     );
-    // _metronomePlugin.onListenTap((_) {
-    //   if (kDebugMode) {
-    //     print('tap');
-    //   }
-    //   setState(() {
-    //     if (metronomeIcon == metronomeIconRight) {
-    //       metronomeIcon = metronomeIconLeft;
-    //     } else {
-    //       metronomeIcon = metronomeIconRight;
-    //     }
-    //   });
-    // });
+    _metronomePlugin.onListenTap((_) {
+      if (kDebugMode) {
+        print('tap');
+      }
+      setState(() {
+        if (metronomeIcon == metronomeIconRight) {
+          metronomeIcon = metronomeIconLeft;
+        } else {
+          metronomeIcon = metronomeIconRight;
+        }
+      });
+    });
   }
 
   @override

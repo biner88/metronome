@@ -34,7 +34,7 @@ class Metronome {
                 print(error)
             }
         }
-
+#if os(iOS)
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setActive(true)
@@ -44,6 +44,7 @@ class Metronome {
             print(error)
         }
         UIApplication.shared.beginReceivingRemoteControlEvents()
+#endif
     }
     public func enableTapCallback(_eventTapSink: EventTapHandler) {
        beatTimer = BeatTimer(eventTap: _eventTapSink)

@@ -48,10 +48,10 @@ flutter:
         pluginClass: MetronomePlugin
       ios:
         pluginClass: MetronomePlugin
-        # sharedDarwinSource: true
+        sharedDarwinSource: true
       macos:
         pluginClass: MetronomePlugin
-        # sharedDarwinSource: true
+        sharedDarwinSource: true
       web:
         pluginClass: MetronomeWeb
         fileName: metronome_web.dart

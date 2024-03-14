@@ -1,5 +1,9 @@
+#if os(iOS)
 import Flutter
-import UIKit
+#elseif os(macOS)
+import FlutterMacOS
+import Cocoa
+#endif
 public class MetronomePlugin: NSObject, FlutterPlugin {
     var channel:FlutterMethodChannel?
     var metronome:Metronome?
@@ -12,12 +16,17 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     //
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = MetronomePlugin(with: registrar)
-        instance.channel = FlutterMethodChannel(name: "metronome", binaryMessenger: registrar.messenger())
+#if os(iOS)
+    let messenger = registrar.messenger()
+#else
+    let messenger = registrar.messenger
+#endif
+        instance.channel = FlutterMethodChannel(name: "metronome", binaryMessenger: messenger)
 
         registrar.addApplicationDelegate(instance)
         registrar.addMethodCallDelegate(instance, channel: instance.channel!)
         //
-        instance.eventTap = FlutterEventChannel(name: "metronome_tap", binaryMessenger: registrar.messenger())
+        instance.eventTap = FlutterEventChannel(name: "metronome_tap", binaryMessenger: messenger)
         instance.eventTap?.setStreamHandler(instance.eventTapListener )
     }
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
