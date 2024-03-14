@@ -76,9 +76,7 @@ metronome.destroy();
 
 ```
 metronome.onListenTick((_) {
-  if (kDebugMode) {
     print('tick');
-  }
 });
 ```
 
