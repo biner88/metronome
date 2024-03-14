@@ -8,7 +8,8 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'metronome_platform_interface.dart';
 
 @JS()
-external void initm(String mainPath, int bpm, int volume);
+external void initm(
+    String mainPath, int bpm, int volume, bool enableTapCallback);
 @JS()
 external void playm(int bpm);
 @JS()
@@ -38,6 +39,7 @@ class MetronomeWeb extends MetronomePlatform {
     String mainPath, {
     int bpm = 120,
     int volume = 50,
+    bool enableTapCallback = false,
   }) async {
     if (volume > 100 || volume < 0) {
       throw Exception('Volume must be between 0 and 100');
@@ -45,7 +47,7 @@ class MetronomeWeb extends MetronomePlatform {
     if (bpm < 0) {
       throw Exception('BPM must be greater than 0');
     }
-    initm(mainPath, bpm, volume);
+    initm(mainPath, bpm, volume, enableTapCallback);
   }
 
   @override

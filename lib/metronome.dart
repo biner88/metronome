@@ -6,17 +6,27 @@ import 'metronome_platform_interface.dart';
 
 class Metronome {
   ///initialize the metronome
+  /// ```
+  /// @param mainPath: the path of the main audio file
+  /// @param accentedPath: the path of the accented audio file, default null
+  /// @param bpm: the beats per minute, default `120`
+  /// @param volume: the volume of the metronome, default `50`%
+  /// @param enableTapCallback: enable tap callback ,default `false`
+  /// ```
   Future<void> init(
     String mainPath, {
     String? accentedPath,
     int bpm = 120,
     int volume = 50,
+    bool enableTapCallback = false,
   }) async {
     if (!PlatformUtils.isWeb) {
       String mainFile = await saveAudioAssetsToLocal(mainPath);
-      MetronomePlatform.instance.init(mainFile, bpm: bpm, volume: volume);
+      MetronomePlatform.instance.init(mainFile,
+          bpm: bpm, volume: volume, enableTapCallback: enableTapCallback);
     } else {
-      MetronomePlatform.instance.init(mainPath, bpm: bpm, volume: volume);
+      MetronomePlatform.instance.init(mainPath,
+          bpm: bpm, volume: volume, enableTapCallback: enableTapCallback);
     }
   }
 
@@ -102,7 +112,15 @@ class Metronome {
     return mainFile.path;
   }
 
-  ///CallBack function on Tick
+  ///CallBack function on Tick,
+  ///You must set enableTapCallback=true in the init() method to enable it.
+  /// ```dart
+  /// init(enableTapCallback=true);
+  ///
+  /// metronome.onListenTap((_) {
+  ///     print('tap');
+  /// });
+  /// ```
   void onListenTap(onEvent) {
     MetronomePlatform.instance.onListenTap(onEvent);
   }

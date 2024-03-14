@@ -12,11 +12,9 @@ class Metronome {
     public var audioBpm: Int = 120
     public var audioVolume: Float = 0.5
     //
-    private var eventTap: EventTapHandler
     
-    init(mainFile: URL,accentedFile: URL,eventTapHandler: EventTapHandler) {
-        beatTimer = BeatTimer()
-        eventTap = eventTapHandler
+    init(mainFile: URL,accentedFile: URL,_eventTapSink: EventTapHandler,enableTapCallback: Bool) {
+        beatTimer = BeatTimer(eventTap: _eventTapSink,_enableTapCallback: enableTapCallback)
         //
         audioFileMain = try! AVAudioFile(forReading: mainFile)
         audioPlayerNode = AVAudioPlayerNode()
@@ -41,8 +39,8 @@ class Metronome {
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setActive(true)
-            try session.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
-            try session.setCategory(AVAudioSession.Category.playback)
+            try session.overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+            try session.setCategory(AVAudioSession.Category.playback, options: AVAudioSession.CategoryOptions.allowBluetooth)
         } catch {
             print(error)
         }
@@ -87,7 +85,7 @@ class Metronome {
 
         self.audioPlayerNode.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
         //
-        beatTimer.startBeatTimer(bpm: bpm, eventTapHandler: eventTap)
+        beatTimer.startBeatTimer(bpm: bpm)
     }
     func pause() {
         audioPlayerNode.pause()

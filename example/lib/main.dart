@@ -21,7 +21,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _metronomePlugin.init('assets/audio/snare.wav', bpm: bpm, volume: vol);
+    _metronomePlugin.init(
+      'assets/audio/snare.wav',
+      bpm: bpm,
+      volume: vol,
+      enableTapCallback: true,
+    );
     _metronomePlugin.onListenTap((_) {
       if (kDebugMode) {
         print('tap');
@@ -71,38 +76,56 @@ class _MyAppState extends State<MyApp> {
                   setState(() {});
                 },
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    child: const Text("base44"),
-                    onPressed: () {
-                      _metronomePlugin
-                          .setAudioAssets('assets/audio/base44_wav.wav');
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text("sound3"),
-                    onPressed: () {
-                      _metronomePlugin
-                          .setAudioAssets('assets/audio/sound3.wav');
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text("snare"),
-                    onPressed: () {
-                      _metronomePlugin.setAudioAssets('assets/audio/snare.wav');
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text("sticks48"),
-                    onPressed: () {
-                      _metronomePlugin
-                          .setAudioAssets('assets/audio/sticks48_wav.wav');
-                    },
-                  ),
-                ],
-              )
+              SizedBox(
+                width: 200,
+                height: 400,
+                child: ListView(
+                  children: [
+                    ElevatedButton(
+                      child: const Text("base"),
+                      onPressed: () {
+                        _metronomePlugin
+                            .setAudioAssets('assets/audio/base44_wav.wav');
+                      },
+                    ),
+                    ElevatedButton(
+                      child: const Text("claves"),
+                      onPressed: () {
+                        _metronomePlugin
+                            .setAudioAssets('assets/audio/claves44_wav.wav');
+                      },
+                    ),
+                    ElevatedButton(
+                      child: const Text("hihat"),
+                      onPressed: () {
+                        _metronomePlugin
+                            .setAudioAssets('assets/audio/hihat44_wav.wav');
+                      },
+                    ),
+                    ElevatedButton(
+                      child: const Text("snare"),
+                      onPressed: () {
+                        _metronomePlugin
+                            .setAudioAssets('assets/audio/snare.wav');
+                      },
+                    ),
+                    ElevatedButton(
+                      child: const Text("sticks"),
+                      onPressed: () {
+                        _metronomePlugin
+                            .setAudioAssets('assets/audio/sticks48_wav.wav');
+                      },
+                    ),
+                    ElevatedButton(
+                      child: const Text("woodblock_high"),
+                      onPressed: () {
+                        _metronomePlugin.setAudioAssets(
+                            'assets/audio/woodblock_high44_wav.wav');
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

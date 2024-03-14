@@ -75,7 +75,8 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         let mainFilePath: String = (attributes?["path"] as? String) ?? ""
         let mainFileUrl = URL(fileURLWithPath: mainFilePath);
         if mainFilePath != "" {
-            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl,eventTapHandler: eventTapListener)
+            let _enableTapCallback:Bool = (attributes?["enableTapCallback"] as? Bool) ?? false
+            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl,_eventTapSink: eventTapListener,enableTapCallback: _enableTapCallback)
             setVolume(attributes: attributes)
             setBPM(attributes: attributes)
         }
