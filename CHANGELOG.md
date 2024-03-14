@@ -1,3 +1,14 @@
+## 1.1.0
+
+* Add CallBack function on Tick [#1](https://github.com/biner88/metronome/issues/1)
+* Add getBMP() function
+* Add MacOS support
+* Fix IOS getVolume()
+* Fix Android setVolume()
+* Fix no sound with AirPods [#3](https://github.com/biner88/metronome/issues/3)
+* Change ⚠️ volume type (double to int)
+* Change ⚠️ BPM type (double to int)
+
 ## 1.0.4
 
 * add pause() method

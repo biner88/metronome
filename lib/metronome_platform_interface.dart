@@ -80,7 +80,7 @@ abstract class MetronomePlatform extends PlatformInterface {
     throw UnimplementedError('destroy() has not been implemented.');
   }
 
-  void onListenTap(onEvent) {
-    throw UnimplementedError('onListenTap() has not been implemented.');
+  void onListenTick(onEvent) {
+    throw UnimplementedError('onListenTick() has not been implemented.');
   }
 }

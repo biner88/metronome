@@ -7,7 +7,7 @@ var takt = "4"
 var bpm = 120;
 var metronomeSoundBuffer = null;
 var metronomeAudioContext;
-var enableTapCallback = false;
+var enableTickCallback = false;
 
 function initWeb(mainPath, _bpm, _volume) {
   try {
@@ -92,6 +92,6 @@ function stopWeb() {
   metronomeAudioContext.suspend();
   metronomeAudioContext.currentTime = 0;
 }
-function enableTapCallbackWeb() {
-  enableTapCallback = true;
+function enableTickCallbackWeb() {
+  enableTickCallback = true;
 }

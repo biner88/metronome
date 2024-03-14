@@ -27,13 +27,13 @@ external bool isPlayingWeb();
 @JS()
 external int getBPMWeb();
 @JS()
-external void enableTapCallbackWeb();
+external void enableTickCallbackWeb();
 
 /// A web implementation of the MetronomePlatform of the Metronome plugin.
 class MetronomeWeb extends MetronomePlatform {
   /// Constructs a MetronomeWeb
   MetronomeWeb();
-  final eventTapChannel = const EventChannel("metronome_tap");
+  final eventTickChannel = const EventChannel("metronome_tick");
 
   static void registerWith(Registrar registrar) {
     MetronomePlatform.instance = MetronomeWeb();
@@ -108,9 +108,9 @@ class MetronomeWeb extends MetronomePlatform {
   }
 
   @override
-  void onListenTap(onEvent) {
-    enableTapCallbackWeb();
+  void onListenTick(onEvent) {
+    enableTickCallbackWeb();
     //TODO
-    // eventTapChannel.receiveBroadcastStream().listen(onEvent);
+    // eventTickChannel.receiveBroadcastStream().listen(onEvent);
   }
 }

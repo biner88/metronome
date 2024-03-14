@@ -106,11 +106,11 @@ class Metronome {
 
   ///CallBack function on Tick,
   /// ```dart
-  /// metronome.onListenTap((_) {
-  ///     print('tap');
+  /// metronome.onListenTick((_) {
+  ///     print('tick');
   /// });
   /// ```
-  void onListenTap(onEvent) {
-    MetronomePlatform.instance.onListenTap(onEvent);
+  void onListenTick(onEvent) {
+    MetronomePlatform.instance.onListenTick(onEvent);
   }
 }

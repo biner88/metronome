@@ -46,8 +46,8 @@ class Metronome {
         UIApplication.shared.beginReceivingRemoteControlEvents()
 #endif
     }
-    public func enableTapCallback(_eventTapSink: EventTapHandler) {
-       beatTimer = BeatTimer(eventTap: _eventTapSink)
+    public func enableTickCallback(_eventTickSink: EventTickHandler) {
+       beatTimer = BeatTimer(eventTick: _eventTickSink)
     }
     private func generateBuffer(bpm: Int) -> AVAudioPCMBuffer {
 

@@ -1,8 +1,8 @@
 class BeatTimer {
-    private var eventTap: EventTapHandler
+    private var eventTick: EventTickHandler
     
-    init(eventTap: EventTapHandler) {
-        self.eventTap = eventTap
+    init(eventTick: EventTickHandler) {
+        self.eventTick = eventTick
     }
     private var beatTimer : Timer? = nil {
        willSet {
@@ -17,7 +17,7 @@ class BeatTimer {
 //            let now2 = Date().timeIntervalSince1970
 //            print("tick1:"+String(describing: timerIntervallInSamples)+",diff:"+String(describing: (now2-now1)))
 //            now1 = now2
-            self.eventTap.send(res: true)
+            self.eventTick.send(res: true)
         }
     }
     func stopBeatTimer() {

@@ -1,13 +1,13 @@
 name: metronome
 description: Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio source settings.
-version: 1.0.5
+version: 1.1.0
 homepage: https://github.com/biner88/metronome
 issue_tracker: https://github.com/biner88/metronome/issues
 screenshots:
   - description: 'metronome icon'
     path: example/assets/metronome-left.png
   - description: 'metronome screenshots'
-    path: screenshot/home1.png
+    path: screenshot/demo2.png
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

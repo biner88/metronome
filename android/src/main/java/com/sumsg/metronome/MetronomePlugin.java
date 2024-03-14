@@ -13,39 +13,43 @@ import io.flutter.plugin.common.MethodChannel.Result;
 
 /** MetronomePlugin */
 public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
+  /// The MethodChannel that will the communication between Flutter and native
+  /// Android
   ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
+  /// This local reference serves to register the plugin with the Flutter Engine
+  /// and unregister it
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
   //
-  private EventChannel eventTap;
-  private EventChannel.EventSink eventTapSink;
-//  private final String TAG = "metronome";
+  private EventChannel eventTick;
+  private EventChannel.EventSink eventTickSink;
+  // private final String TAG = "metronome";
   /// Metronome
   private Metronome metronome;
   private Context context;
-  private boolean enableTapCallback = false;
+  private boolean enableTickCallback = false;
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "metronome");
     channel.setMethodCallHandler(this);
     context = flutterPluginBinding.getApplicationContext();
     //
-    eventTap = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
-            "metronome_tap");
-    eventTap.setStreamHandler(new EventChannel.StreamHandler() {
+    eventTick = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
+        "metronome_tick");
+    eventTick.setStreamHandler(new EventChannel.StreamHandler() {
       @Override
       public void onListen(Object args, EventChannel.EventSink events) {
-        eventTapSink = events;
+        eventTickSink = events;
       }
 
       @Override
       public void onCancel(Object args) {
-        eventTapSink = null;
+        eventTickSink = null;
       }
     });
   }
+
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     switch (call.method) {
@@ -54,7 +58,8 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
         break;
       case "play":
         Integer _bpm = call.argument("bpm");
-        if (_bpm==null) _bpm = 120;
+        if (_bpm == null)
+          _bpm = 120;
         metronome.play(_bpm);
         break;
       case "pause":
@@ -84,8 +89,8 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
       case "destroy":
         metronome.destroy();
         break;
-      case "enableTapCallback":
-        enableTapCallback = true;
+      case "enableTickCallback":
+        enableTickCallback = true;
         break;
       default:
         result.notImplemented();
@@ -97,39 +102,43 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     context = null;
     channel.setMethodCallHandler(null);
-    eventTap.setStreamHandler(null);
+    eventTick.setStreamHandler(null);
     metronome.destroy();
   }
-  private void metronomeInit(@NonNull MethodCall call){
-    if (!Objects.equals(call.argument("path"), "")){
+
+  private void metronomeInit(@NonNull MethodCall call) {
+    if (!Objects.equals(call.argument("path"), "")) {
       String _mainFilePath = call.argument("path");
-      metronome = new Metronome(context,_mainFilePath);
-      if (enableTapCallback) {
-        metronome.enableTapCallback(eventTapSink);
+      metronome = new Metronome(context, _mainFilePath);
+      if (enableTickCallback) {
+        metronome.enableTickCallback(eventTickSink);
       }
       setVolume(call);
       setBPM(call);
     }
   }
-  private void setVolume(@NonNull MethodCall call){
-    if (metronome!=null){
-        Double _volume = call.argument("volume");
-        if (_volume != null){
-          float _volume1 = _volume.floatValue();
-          metronome.setVolume(_volume1);
-        }
+
+  private void setVolume(@NonNull MethodCall call) {
+    if (metronome != null) {
+      Double _volume = call.argument("volume");
+      if (_volume != null) {
+        float _volume1 = _volume.floatValue();
+        metronome.setVolume(_volume1);
+      }
     }
   }
-  private void setBPM(@NonNull MethodCall call){
-    if (metronome!=null){
+
+  private void setBPM(@NonNull MethodCall call) {
+    if (metronome != null) {
       Integer _bpm = call.argument("bpm");
-      if (_bpm != null){
+      if (_bpm != null) {
         metronome.setBPM(_bpm);
       }
     }
   }
-  private void setAudioFile(@NonNull MethodCall call){
-    if (metronome!=null){
+
+  private void setAudioFile(@NonNull MethodCall call) {
+    if (metronome != null) {
       metronome.setAudioFile(call.argument("path"));
     }
   }

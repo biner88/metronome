@@ -5,18 +5,13 @@
 Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio source settings.
 ##
 
-![Metronome](https://raw.githubusercontent.com/biner88/metronome/main/screenshot/home1.png)
+![Metronome](https://raw.githubusercontent.com/biner88/metronome/main/screenshot/demo2.png)
 
 ## TODO
 
-* [x] Add CallBack function on Tick [#1](https://github.com/biner88/metronome/issues/1)
-* [x] Add getBMP() function
-* [x] Fix IOS getVolume()
-* [x] Change volume type (double to int)
-* [x] Change bpm type (double to int)
-* [x] Fix no sound with AirPods [#3](https://github.com/biner88/metronome/issues/3)
-* [ ] Add MacOS support
+* [ ] Add support for time signature [#2](https://github.com/biner88/metronome/issues/2)
 * [ ] Add Windows support
+* [ ] Add CallBack function on Tick for web
 
 ## Quick Start 
 
@@ -77,12 +72,12 @@ metronome.setAudioFile('assets/audio/snare.wav');
 metronome.destroy();
 ```
 
-### Tap callback
+### Tick callback
 
 ```
-metronome.onListenTap((_) {
+metronome.onListenTick((_) {
   if (kDebugMode) {
-    print('tap');
+    print('tick');
   }
 });
 ```

@@ -29,9 +29,9 @@ class _MyAppState extends State<MyApp> {
       bpm: bpm,
       volume: vol,
     );
-    _metronomePlugin.onListenTap((_) {
+    _metronomePlugin.onListenTick((_) {
       if (kDebugMode) {
-        print('tap');
+        print('tick');
       }
       setState(() {
         if (metronomeIcon == metronomeIconRight) {

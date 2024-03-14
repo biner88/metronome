@@ -8,7 +8,7 @@ class MethodChannelMetronome extends MetronomePlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('metronome');
-  final eventTapChannel = const EventChannel("metronome_tap");
+  final eventTickChannel = const EventChannel("metronome_tick");
 
   @override
   Future<void> init(
@@ -191,8 +191,8 @@ class MethodChannelMetronome extends MetronomePlatform {
   }
 
   @override
-  void onListenTap(onEvent) {
-    methodChannel.invokeMethod<void>('enableTapCallback');
-    eventTapChannel.receiveBroadcastStream().listen(onEvent);
+  void onListenTick(onEvent) {
+    methodChannel.invokeMethod<void>('enableTickCallback');
+    eventTickChannel.receiveBroadcastStream().listen(onEvent);
   }
 }

@@ -3,7 +3,7 @@ import Flutter
 #elseif os(macOS)
 import FlutterMacOS
 #endif
-class EventTapHandler: NSObject,FlutterStreamHandler {
+class EventTickHandler: NSObject,FlutterStreamHandler {
     private var eventSink: FlutterEventSink?
     
     public func send(res:Bool){

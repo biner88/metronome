@@ -8,9 +8,9 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     var channel:FlutterMethodChannel?
     var metronome:Metronome?
     //
-    private let eventTapListener: EventTapHandler = EventTapHandler()
-    private var eventTap: FlutterEventChannel?
-    private var enableTapCallback:Bool = false
+    private let eventTickListener: EventTickHandler = EventTickHandler()
+    private var eventTick: FlutterEventChannel?
+    private var enableTickCallback:Bool = false
     //
     init(with registrar: FlutterPluginRegistrar) {}
     //
@@ -26,8 +26,8 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         registrar.addApplicationDelegate(instance)
         registrar.addMethodCallDelegate(instance, channel: instance.channel!)
         //
-        instance.eventTap = FlutterEventChannel(name: "metronome_tap", binaryMessenger: messenger)
-        instance.eventTap?.setStreamHandler(instance.eventTapListener )
+        instance.eventTick = FlutterEventChannel(name: "metronome_tick", binaryMessenger: messenger)
+        instance.eventTick?.setStreamHandler(instance.eventTickListener )
     }
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
           let attributes = call.arguments as? NSDictionary
@@ -66,8 +66,8 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
               case "destroy":
                   metronome?.destroy()
                 break;
-              case "enableTapCallback":
-                enableTapCallback = true;
+              case "enableTickCallback":
+                enableTickCallback = true;
                 break;
               default:
                   result("unkown")
@@ -76,7 +76,7 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     }
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
        channel?.setMethodCallHandler(nil)
-       eventTap?.setStreamHandler(nil)
+       eventTick?.setStreamHandler(nil)
     }
     private func setBPM( attributes:NSDictionary?) {
         if metronome != nil {
@@ -89,8 +89,8 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         let mainFileUrl = URL(fileURLWithPath: mainFilePath);
         if mainFilePath != "" {
             metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl)
-            if(enableTapCallback){
-                metronome?.enableTapCallback(_eventTapSink: eventTapListener);
+            if(enableTickCallback){
+                metronome?.enableTickCallback(_eventTickSink: eventTickListener);
             }
             setVolume(attributes: attributes)
             setBPM(attributes: attributes)
