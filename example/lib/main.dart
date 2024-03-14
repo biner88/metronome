@@ -18,6 +18,9 @@ class _MyAppState extends State<MyApp> {
   bool isplaying = false;
   int bpm = 120;
   int vol = 50;
+  String metronomeIcon = 'assets/metronome-left.png';
+  String metronomeIconRight = 'assets/metronome-right.png';
+  String metronomeIconLeft = 'assets/metronome-left.png';
   @override
   void initState() {
     super.initState();
@@ -31,6 +34,13 @@ class _MyAppState extends State<MyApp> {
       if (kDebugMode) {
         print('tap');
       }
+      setState(() {
+        if (metronomeIcon == metronomeIconRight) {
+          metronomeIcon = metronomeIconLeft;
+        } else {
+          metronomeIcon = metronomeIconRight;
+        }
+      });
     });
   }
 
@@ -42,10 +52,15 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Metronome example'),
         ),
-        body: SizedBox(
-          width: double.infinity,
-          child: Column(
+        body: Container(
+          padding: const EdgeInsets.all(10),
+          child: ListView(
             children: [
+              Image.asset(
+                metronomeIcon,
+                height: 100,
+                gaplessPlayback: true,
+              ),
               Text(
                 'BPM:$bpm',
                 style: const TextStyle(fontSize: 20),
@@ -79,7 +94,7 @@ class _MyAppState extends State<MyApp> {
               SizedBox(
                 width: 200,
                 height: 400,
-                child: ListView(
+                child: Column(
                   children: [
                     ElevatedButton(
                       child: const Text("base"),
