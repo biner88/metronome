@@ -4,31 +4,36 @@
 // ignore: avoid_web_libraries_in_flutter, unused_import
 import 'dart:js';
 import 'dart:js_interop';
+import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'metronome_platform_interface.dart';
 
 @JS()
-external void initm(
-    String mainPath, int bpm, int volume, bool enableTapCallback);
+external void initWeb(String mainPath, int bpm, int volume);
 @JS()
-external void playm(int bpm);
+external void playWeb(int bpm);
 @JS()
-external void stopm();
+external void stopWeb();
 @JS()
-external void setBPMm(int bpm);
+external void setBPMWeb(int bpm);
 @JS()
-external void setVolumem(int volume);
+external void setVolumeWeb(int volume);
 @JS()
-external void setAudioFilem(String path);
+external void setAudioFileWeb(String path);
 @JS()
-external int getVolumem();
+external int getVolumeWeb();
 @JS()
-external bool isPlayingm();
+external bool isPlayingWeb();
+@JS()
+external int getBPMWeb();
+@JS()
+external void enableTapCallbackWeb();
 
 /// A web implementation of the MetronomePlatform of the Metronome plugin.
 class MetronomeWeb extends MetronomePlatform {
   /// Constructs a MetronomeWeb
   MetronomeWeb();
+  final eventTapChannel = const EventChannel("metronome_tap");
 
   static void registerWith(Registrar registrar) {
     MetronomePlatform.instance = MetronomeWeb();
@@ -39,7 +44,6 @@ class MetronomeWeb extends MetronomePlatform {
     String mainPath, {
     int bpm = 120,
     int volume = 50,
-    bool enableTapCallback = false,
   }) async {
     if (volume > 100 || volume < 0) {
       throw Exception('Volume must be between 0 and 100');
@@ -47,7 +51,7 @@ class MetronomeWeb extends MetronomePlatform {
     if (bpm < 0) {
       throw Exception('BPM must be greater than 0');
     }
-    initm(mainPath, bpm, volume, enableTapCallback);
+    initWeb(mainPath, bpm, volume);
   }
 
   @override
@@ -57,41 +61,56 @@ class MetronomeWeb extends MetronomePlatform {
 
   @override
   Future<void> play(int bpm) async {
-    playm(bpm);
+    if (bpm < 0) {
+      throw Exception('BPM must be greater than 0');
+    }
+    playWeb(bpm);
   }
 
   @override
   Future<void> pause() async {
-    stopm();
+    stopWeb();
   }
 
   @override
   Future<void> stop() async {
-    stopm();
+    stopWeb();
   }
 
   @override
   Future<int?> getVolume() async {
-    return getVolumem();
+    return getVolumeWeb();
   }
 
   @override
   Future<void> setVolume(int volume) async {
-    setVolumem(volume);
+    setVolumeWeb(volume);
   }
 
   @override
   Future<bool?> isPlaying() async {
-    return isPlayingm();
+    return isPlayingWeb();
   }
 
   @override
   Future<void> setAudioFile(String mainPath) async {
-    setAudioFilem(mainPath);
+    setAudioFileWeb(mainPath);
   }
 
   @override
   Future<void> setBPM(int bpm) async {
-    setBPMm(bpm);
+    setBPMWeb(bpm);
+  }
+
+  @override
+  Future<int> getBPM() async {
+    return getBPMWeb();
+  }
+
+  @override
+  void onListenTap(onEvent) {
+    enableTapCallbackWeb();
+    //TODO
+    // eventTapChannel.receiveBroadcastStream().listen(onEvent);
   }
 }

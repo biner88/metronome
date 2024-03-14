@@ -6,21 +6,21 @@ var volume = 1;
 var takt = "4"
 var bpm = 120;
 var metronomeSoundBuffer = null;
-
 var metronomeAudioContext;
+var enableTapCallback = false;
 
-function initm(mainPath, _bpm, _volume) {
+function initWeb(mainPath, _bpm, _volume) {
   try {
     bpm = _bpm;
     volume = _volume;
     metronomeAudioContext = new (window.AudioContext)();
     metronomeAudioContext.suspend && metronomeAudioContext.suspend();
-    setAudioFilem(mainPath);
+    setAudioFileWeb(mainPath);
   } catch (e) {
   }
 }
 
-function setAudioFilem(url) {
+function setAudioFileWeb(url) {
   var request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.responseType = 'arraybuffer';
@@ -61,19 +61,22 @@ function playNote(t) {
   source.start(t);
   source.stop(t + 0.05);
 }
-function setVolumem(vol) {
+function setVolumeWeb(vol) {
   volume = vol;
 }
-function setBPMm(val) {
+function setBPMWeb(val) {
   bpm = val;
 }
-function getVolumem() {
+function getBPMWeb() {
+  return bpm;
+}
+function getVolumeWeb() {
   return volume;
 }
-function isPlayingm() {
+function isPlayingWeb() {
   return isPlaying;
 }
-function playm() {
+function playWeb() {
   isPlaying = true;
   var volumeTP = volume;
   volume = 0;
@@ -83,9 +86,12 @@ function playm() {
   schedule();
   volume = volumeTP;
 }
-function stopm() {
+function stopWeb() {
   isPlaying = false;
   window.clearInterval(timer);
   metronomeAudioContext.suspend();
   metronomeAudioContext.currentTime = 0;
+}
+function enableTapCallbackWeb() {
+  enableTapCallback = true;
 }

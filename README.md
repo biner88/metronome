@@ -10,13 +10,13 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 ## TODO
 
 * [x] Add CallBack function on Tick [#1](https://github.com/biner88/metronome/issues/1)
-* [ ] Add MacOS support
-* [ ] Add Windows support
 * [x] Add getBMP() function
 * [x] Fix IOS getVolume()
 * [x] Change volume type (double to int)
 * [x] Change bpm type (double to int)
 * [x] Fix no sound with AirPods [#3](https://github.com/biner88/metronome/issues/3)
+* [ ] Add MacOS support
+* [ ] Add Windows support
 
 ## Quick Start 
 
