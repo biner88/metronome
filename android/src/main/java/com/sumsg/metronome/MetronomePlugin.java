@@ -1,11 +1,11 @@
 package com.sumsg.metronome;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import java.util.Objects;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -18,15 +18,32 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
-  private final String TAG = "metronome";
+  //
+  private EventChannel eventTap;
+  private EventChannel.EventSink eventTapSink;
+//  private final String TAG = "metronome";
   /// Metronome
   private Metronome metronome;
-  private Context applicationContext;
+  private Context context;
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "metronome");
     channel.setMethodCallHandler(this);
-    applicationContext = flutterPluginBinding.getApplicationContext();
+    context = flutterPluginBinding.getApplicationContext();
+    //
+    eventTap = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
+            "metronome_tap");
+    eventTap.setStreamHandler(new EventChannel.StreamHandler() {
+      @Override
+      public void onListen(Object args, EventChannel.EventSink events) {
+        eventTapSink = events;
+      }
+
+      @Override
+      public void onCancel(Object args) {
+        eventTapSink = null;
+      }
+    });
   }
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
@@ -75,13 +92,17 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    context = null;
     channel.setMethodCallHandler(null);
+    eventTap.setStreamHandler(null);
+    metronome.destroy();
   }
   private void metronomeInit(@NonNull MethodCall call){
     if (!Objects.equals(call.argument("path"), "")){
+      boolean _enableTapCallback = call.argument("enableTapCallback");
+      metronome = new Metronome(context,eventTapSink,_enableTapCallback);
       setBPM(call);
-      metronome = new Metronome(applicationContext);
-      metronome.setAudioFile(call.argument("path"));
+      setAudioFile(call);
       setVolume(call);
     }
   }

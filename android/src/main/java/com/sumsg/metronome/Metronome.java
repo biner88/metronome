@@ -4,8 +4,9 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-public class Metronome {
+import io.flutter.plugin.common.EventChannel;
 
+public class Metronome {
     private final Object mLock = new Object();
     private int mBpm = 120;
     private static final int SAMPLE_RATE = 44100;
@@ -16,8 +17,10 @@ public class Metronome {
     private int mBeatDivisionSampleCount;
     private float volume= (float) 0.5;
     private final Context context;
-    public Metronome(Context ctx) {
+    private final BeatTimer beatTimer;
+    public Metronome(Context ctx,EventChannel.EventSink _eventTapSink,boolean enableTapCallback) {
         context = ctx;
+        beatTimer = new BeatTimer(_eventTapSink,enableTapCallback);
     }
 
     public void setAudioFile(String path) {
@@ -57,17 +60,21 @@ public class Metronome {
                 }
             } while (true);
         }).start();
+        //
+        beatTimer.startBeatTimer(bpm);
     }
     public void pause() {
         if (audioGenerator.getAudioTrack()!=null){
             play = false;
             audioGenerator.getAudioTrack().pause();
+            beatTimer.stopBeatTimer();
         }
     }
     public void stop() {
         if (audioGenerator.getAudioTrack()!=null){
             play = false;
             audioGenerator.getAudioTrack().stop();
+            beatTimer.stopBeatTimer();
         }
     }
     public int getVolume() {
@@ -88,6 +95,7 @@ public class Metronome {
     public void setBPM(int bpm) {
         mBpm = bpm;
         calcSilence();
+        beatTimer.startBeatTimer(bpm);
     }
     public double getBPM() {
         return mBpm;
