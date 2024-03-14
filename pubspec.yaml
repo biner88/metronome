@@ -10,8 +10,8 @@ screenshots:
     path: screenshot/home1.png
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
 
 dependencies:
   flutter:
@@ -48,6 +48,10 @@ flutter:
         pluginClass: MetronomePlugin
       ios:
         pluginClass: MetronomePlugin
+        # sharedDarwinSource: true
+      macos:
+        pluginClass: MetronomePlugin
+        # sharedDarwinSource: true
       web:
         pluginClass: MetronomeWeb
         fileName: metronome_web.dart
