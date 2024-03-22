@@ -1,4 +1,5 @@
 package com.sumsg.metronome;
+
 import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -12,43 +13,47 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class AudioGenerator {
-	
+
     private final int sampleRate;
     private AudioTrack audioTrack;
-//    private AudioManager audioManager;
+
+    // private AudioManager audioManager;
     public AudioGenerator(int sampleRate) {
-    	this.sampleRate = sampleRate;
+        this.sampleRate = sampleRate;
     }
-    public void createPlayer(Context context){
+
+    public void createPlayer(Context context, float volume) {
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 sampleRate, AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT, sampleRate,
                 AudioTrack.MODE_STREAM);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            audioTrack.setVolume(0.5F);
+            audioTrack.setVolume(volume);
         }
         audioTrack.play();
     }
+
     public void writeSound(short[] sound) {
-        if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED ) {
+        if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED) {
             audioTrack.write(sound, 0, sound.length);
         }
     }
 
     public void writeSound(short[] sound, final int length) {
-        if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED ) {
+        if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED) {
             audioTrack.write(sound, 0, length);
         }
     }
-    
+
     public void destroyAudioTrack() {
-    	audioTrack.stop();
-    	audioTrack.release();
+        audioTrack.stop();
+        audioTrack.release();
     }
 
     public AudioTrack getAudioTrack() {
         return audioTrack;
     }
+
     public static SampleDataShort loadSampleFromWav(final String mainFilePath) {
         final int WAV_FILE_HEADER_BYTE_SIZE = 44;
         short[] audio = null;
@@ -84,17 +89,21 @@ public class AudioGenerator {
 
         return new SampleDataShort(audio);
     }
+
     public static class SampleDataShort implements Sample {
         short[] sample;
         int sampleCount;
+
         public SampleDataShort(short[] samp) {
             sample = samp;
             sampleCount = sample.length;
         }
+
         @Override
         public int getSampleCount() {
             return sampleCount;
         }
+
         @Override
         public Object getSample() {
             return sample;
@@ -103,6 +112,7 @@ public class AudioGenerator {
 
     public interface Sample {
         int getSampleCount();
+
         Object getSample();
     }
 }

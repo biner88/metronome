@@ -10,7 +10,7 @@ class Metronome {
     private var mixerNode: AVAudioMixerNode
     //var
     public var audioBpm: Int = 120
-    public var audioVolume: Float = 0.5
+    public var audioVolume: Float = 0
     //
     
     init(mainFile: URL,accentedFile: URL) {

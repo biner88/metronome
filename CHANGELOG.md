@@ -1,3 +1,7 @@
+## 1.1.0+1
+
+* Fix init volume being ignored [#6](https://github.com/biner88/metronome/issues/6)
+
 ## 1.1.0
 
 * Add CallBack function on Tick [#1](https://github.com/biner88/metronome/issues/1)

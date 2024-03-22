@@ -15,7 +15,7 @@ public class Metronome {
     private short[] mTookSilenceSoundArray;
     private AudioGenerator.Sample mTook;
     private int mBeatDivisionSampleCount;
-    private float volume = (float) 0.5;
+    private float mVolume = (float) 0.0;
     private final Context context;
     private BeatTimer beatTimer;
 
@@ -52,8 +52,7 @@ public class Metronome {
         isInitialized();
         setBPM(bpm);
         play = true;
-        audioGenerator.createPlayer(context);
-        setVolume(volume);
+        audioGenerator.createPlayer(context, mVolume);
         calcSilence();
         new Thread(() -> {
             do {
@@ -93,15 +92,15 @@ public class Metronome {
     }
 
     public int getVolume() {
-        return (int) (volume * 100);
+        return (int) (mVolume * 100);
     }
 
     public void setVolume(float val) {
+        mVolume = val;
         if (audioGenerator.getAudioTrack() != null) {
-            volume = val;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 try {
-                    audioGenerator.getAudioTrack().setVolume(volume);
+                    audioGenerator.getAudioTrack().setVolume(mVolume);
                 } catch (Exception e) {
                     Log.e("setVolume", String.valueOf(e));
                 }

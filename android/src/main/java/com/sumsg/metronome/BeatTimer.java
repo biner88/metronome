@@ -22,8 +22,8 @@ public class BeatTimer {
         beatRunnable = new Runnable() {
             @Override
             public void run() {
-                handler.postDelayed(this, (long) (timerIntervalInSamples * 1000));
                 eventTickSink.success(true);
+                handler.postDelayed(this, (long) (timerIntervalInSamples * 1000));
             }
         };
 
