@@ -11,17 +11,20 @@ class Metronome {
   /// @param accentedPath: the path of the accented audio file, default null
   /// @param bpm: the beats per minute, default `120`
   /// @param volume: the volume of the metronome, default `50`%
+  /// @param enableSession: default `true`, only works on IOS
   /// ```
   Future<void> init(
     String mainPath, {
     String? accentedPath,
     int bpm = 120,
     int volume = 50,
+    bool enableSession = true,
   }) async {
     if (!PlatformUtils.isWeb) {
       mainPath = await saveAudioAssetsToLocal(mainPath);
     }
-    MetronomePlatform.instance.init(mainPath, bpm: bpm, volume: volume);
+    MetronomePlatform.instance
+        .init(mainPath, bpm: bpm, volume: volume, enableSession: enableSession);
   }
 
   ///play the metronome

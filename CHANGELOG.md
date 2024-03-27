@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Add enableSession parameter for IOS [#5](https://github.com/biner88/metronome/issues/5)
+
 ## 1.1.0+1
 
 * Fix init volume being ignored [#6](https://github.com/biner88/metronome/issues/6)

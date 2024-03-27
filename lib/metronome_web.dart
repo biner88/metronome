@@ -44,6 +44,7 @@ class MetronomeWeb extends MetronomePlatform {
     String mainPath, {
     int bpm = 120,
     int volume = 50,
+    bool enableSession = true,
   }) async {
     if (volume > 100 || volume < 0) {
       throw Exception('Volume must be between 0 and 100');

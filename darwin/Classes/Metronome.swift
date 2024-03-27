@@ -13,7 +13,7 @@ class Metronome {
     public var audioVolume: Float = 0
     //
     
-    init(mainFile: URL,accentedFile: URL) {
+    init(mainFile: URL,accentedFile: URL,enableSession: Bool) {
         //
         audioFileMain = try! AVAudioFile(forReading: mainFile)
         audioPlayerNode = AVAudioPlayerNode()
@@ -35,13 +35,15 @@ class Metronome {
             }
         }
 #if os(iOS)
-        let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setActive(true)
-            try session.overrideOutputAudioPort(AVAudioSession.PortOverride.none)
-            try session.setCategory(AVAudioSession.Category.playback, options: AVAudioSession.CategoryOptions.allowBluetooth)
-        } catch {
-            print(error)
+        if enableSession {
+            let session = AVAudioSession.sharedInstance()
+            do {
+                try session.setActive(true)
+                //try session.overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+                try session.setCategory(AVAudioSession.Category.playback, options: [.defaultToSpeaker, .allowAirPlay, .allowBluetoothA2DP])
+            } catch {
+                print(error)
+            }
         }
         UIApplication.shared.beginReceivingRemoteControlEvents()
 #endif

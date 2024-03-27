@@ -87,8 +87,9 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     private func metronomeInit( attributes:NSDictionary?) {
         let mainFilePath: String = (attributes?["path"] as? String) ?? ""
         let mainFileUrl = URL(fileURLWithPath: mainFilePath);
+        let enableSession: Bool = (attributes?["enableSession"] as? Bool) ?? true
         if mainFilePath != "" {
-            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl)
+            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl,enableSession:enableSession)
             if(enableTickCallback){
                 metronome?.enableTickCallback(_eventTickSink: eventTickListener);
             }

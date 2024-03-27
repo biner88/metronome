@@ -15,6 +15,7 @@ class MethodChannelMetronome extends MetronomePlatform {
     String mainPath, {
     int bpm = 120,
     int volume = 50,
+    bool enableSession = true,
   }) async {
     if (mainPath == '') {
       throw Exception('Main path cannot be empty');
@@ -30,6 +31,7 @@ class MethodChannelMetronome extends MetronomePlatform {
         'path': mainPath,
         'bpm': bpm,
         'volume': volume / 100.0,
+        'enableSession': enableSession,
       });
     } catch (e) {
       if (kDebugMode) {
