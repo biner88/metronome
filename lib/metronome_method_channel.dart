@@ -23,7 +23,7 @@ class MethodChannelMetronome extends MetronomePlatform {
     if (volume > 100 || volume < 0) {
       throw Exception('Volume must be between 0 and 100');
     }
-    if (bpm < 0) {
+    if (bpm <= 0) {
       throw Exception('BPM must be greater than 0');
     }
     try {
@@ -42,7 +42,7 @@ class MethodChannelMetronome extends MetronomePlatform {
 
   @override
   Future<void> play(int bpm) async {
-    if (bpm < 0) {
+    if (bpm <= 0) {
       throw Exception('BPM must be greater than 0');
     }
     try {
@@ -80,7 +80,7 @@ class MethodChannelMetronome extends MetronomePlatform {
 
   @override
   Future<void> setBPM(int bpm) async {
-    if (bpm < 0) {
+    if (bpm <= 0) {
       throw Exception('BPM must be greater than 0');
     }
     try {

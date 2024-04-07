@@ -49,7 +49,7 @@ class MetronomeWeb extends MetronomePlatform {
     if (volume > 100 || volume < 0) {
       throw Exception('Volume must be between 0 and 100');
     }
-    if (bpm < 0) {
+    if (bpm <= 0) {
       throw Exception('BPM must be greater than 0');
     }
     initWeb(mainPath, bpm, volume);
@@ -62,7 +62,7 @@ class MetronomeWeb extends MetronomePlatform {
 
   @override
   Future<void> play(int bpm) async {
-    if (bpm < 0) {
+    if (bpm <= 0) {
       throw Exception('BPM must be greater than 0');
     }
     playWeb(bpm);
@@ -100,6 +100,9 @@ class MetronomeWeb extends MetronomePlatform {
 
   @override
   Future<void> setBPM(int bpm) async {
+    if (bpm <= 0) {
+      throw Exception('BPM must be greater than 0');
+    }
     setBPMWeb(bpm);
   }
 

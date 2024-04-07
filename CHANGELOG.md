@@ -1,3 +1,7 @@
+## 1.1.1+1
+
+Fix BPM must be greater than 0 [#8](https://github.com/biner88/metronome/issues/8)
+
 ## 1.1.1
 
 * Add enableSession parameter for IOS [#5](https://github.com/biner88/metronome/issues/5)
