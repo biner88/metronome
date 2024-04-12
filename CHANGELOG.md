@@ -1,6 +1,11 @@
+## 1.1.1+2
+
+* Fix Android: remove destroy from onDetachedFromEngine [#10](https://github.com/biner88/metronome/issues/10) , [#7](https://github.com/biner88/metronome/pull/7) 
+* Add privacy manifest
+
 ## 1.1.1+1
 
-Fix BPM must be greater than 0 [#8](https://github.com/biner88/metronome/issues/8)
+* Fix BPM must be greater than 0 [#8](https://github.com/biner88/metronome/issues/8)
 
 ## 1.1.1
 

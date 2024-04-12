@@ -25,7 +25,7 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   private EventChannel.EventSink eventTickSink;
   // private final String TAG = "metronome";
   /// Metronome
-  private Metronome metronome;
+  private Metronome metronome = null;
   private Context context;
   private boolean enableTickCallback = false;
 
@@ -103,7 +103,6 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
     context = null;
     channel.setMethodCallHandler(null);
     eventTick.setStreamHandler(null);
-    metronome.destroy();
   }
 
   private void metronomeInit(@NonNull MethodCall call) {

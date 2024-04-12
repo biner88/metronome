@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'metronome'
-  s.version          = '1.0.5'
+  s.version          = '1.0.6'
   s.summary          = 'Metronome'
   s.description      = <<-DESC
 Metronome
@@ -17,9 +17,10 @@ Metronome
   # s.resources    = ['Assets/**.*']
   s.ios.dependency 'Flutter'
   s.osx.dependency 'FlutterMacOS'
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '12.0'
   s.osx.deployment_target = '10.14'
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
+  s.resource_bundles = {'metronome_darwin_privacy' => ['Resources/PrivacyInfo.xcprivacy']}
 end
