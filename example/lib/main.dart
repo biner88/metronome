@@ -21,11 +21,19 @@ class _MyAppState extends State<MyApp> {
   String metronomeIcon = 'assets/metronome-left.png';
   String metronomeIconRight = 'assets/metronome-right.png';
   String metronomeIconLeft = 'assets/metronome-left.png';
+  final List wavs = [
+    'base',
+    'claves',
+    'hihat',
+    'snare',
+    'sticks',
+    'woodblock_high'
+  ];
   @override
   void initState() {
     super.initState();
     _metronomePlugin.init(
-      'assets/audio/snare.wav',
+      'assets/audio/snare44_wav.wav',
       bpm: bpm,
       volume: vol,
     );
@@ -105,58 +113,17 @@ class _MyAppState extends State<MyApp> {
                 height: 350,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      child: const Text("base"),
-                      onPressed: () async {
-                        await _metronomePlugin
-                            .setAudioAssets('assets/audio/base44_wav.wav');
-                        await _metronomePlugin.setBPM(bpm);
-                      },
-                    ),
-                    ElevatedButton(
-                      child: const Text("claves"),
-                      onPressed: () async {
-                        await _metronomePlugin
-                            .setAudioAssets('assets/audio/claves44_wav.wav');
-                        await _metronomePlugin.setBPM(bpm);
-                      },
-                    ),
-                    ElevatedButton(
-                      child: const Text("hihat"),
-                      onPressed: () async {
-                        await _metronomePlugin
-                            .setAudioAssets('assets/audio/hihat44_wav.wav');
-                        await _metronomePlugin.setBPM(bpm);
-                      },
-                    ),
-                    ElevatedButton(
-                      child: const Text("snare"),
-                      onPressed: () async {
-                        await _metronomePlugin
-                            .setAudioAssets('assets/audio/snare.wav');
-                        await _metronomePlugin.setBPM(bpm);
-                      },
-                    ),
-                    ElevatedButton(
-                      child: const Text("sticks"),
-                      onPressed: () async {
-                        await _metronomePlugin
-                            .setAudioAssets('assets/audio/sticks44_wav.wav');
-                        await _metronomePlugin.setBPM(bpm);
-                      },
-                    ),
-                    ElevatedButton(
-                      child: const Text("woodblock_high"),
-                      onPressed: () async {
-                        await _metronomePlugin
-                            .setAudioAssets(
-                                'assets/audio/woodblock_high44_wav.wav')
-                            .then((value) => null);
-                        await _metronomePlugin.setBPM(bpm);
-                      },
-                    ),
-                  ],
+                  children: wavs
+                      .map(
+                        (wav) => ElevatedButton(
+                          child: Text(wav),
+                          onPressed: () {
+                            _metronomePlugin.setAudioAssets(
+                                'assets/audio/${wav}44_wav.wav');
+                          },
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             ],

@@ -26,6 +26,10 @@ public class Metronome {
 
     public void setAudioFile(String path) {
         mTook = AudioGenerator.loadSampleFromWav(path);
+        if (play) {
+            stop();
+            play(mBpm);
+        }
     }
 
     public void enableTickCallback(EventChannel.EventSink _eventTickSink) {

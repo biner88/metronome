@@ -1,3 +1,7 @@
+## 1.1.3
+
+* Update example
+
 ## 1.1.2
 
 * Update example
