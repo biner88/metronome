@@ -1,3 +1,7 @@
+## 1.1.1+3
+
+* Update example
+
 ## 1.1.1+2
 
 * Fix Android: remove destroy from onDetachedFromEngine [#10](https://github.com/biner88/metronome/issues/10) , [#7](https://github.com/biner88/metronome/pull/7) 

@@ -84,7 +84,7 @@ public class Metronome {
     public void stop() {
         if (audioGenerator.getAudioTrack() != null) {
             play = false;
-            audioGenerator.getAudioTrack().stop();
+            audioGenerator.destroyAudioTrack();
         }
         if (beatTimer != null) {
             beatTimer.stopBeatTimer();
