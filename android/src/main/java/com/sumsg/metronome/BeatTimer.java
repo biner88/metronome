@@ -2,7 +2,6 @@ package com.sumsg.metronome;
 
 import android.os.Handler;
 import android.os.Looper;
-
 import io.flutter.plugin.common.EventChannel;
 
 public class BeatTimer {
@@ -19,15 +18,17 @@ public class BeatTimer {
         stopBeatTimer();
         handler = new Handler(Looper.getMainLooper());
         double timerIntervalInSamples = 60 / (double) bpm;
-        beatRunnable = new Runnable() {
-            @Override
-            public void run() {
-                eventTickSink.success(true);
-                handler.postDelayed(this, (long) (timerIntervalInSamples * 1000));
-            }
-        };
+        if (eventTickSink!=null){
+            beatRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    eventTickSink.success(true);
+                    handler.postDelayed(this, (long) (timerIntervalInSamples * 1000));
+                }
+            };
 
-        handler.post(beatRunnable);
+            handler.post(beatRunnable);
+        }
     }
 
     public void stopBeatTimer() {

@@ -27,7 +27,6 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   /// Metronome
   private Metronome metronome = null;
   private Context context;
-  private boolean enableTickCallback = false;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -89,9 +88,6 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
       case "destroy":
         metronome.destroy();
         break;
-      case "enableTickCallback":
-        enableTickCallback = true;
-        break;
       default:
         result.notImplemented();
         break;
@@ -108,8 +104,9 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   private void metronomeInit(@NonNull MethodCall call) {
     if (!Objects.equals(call.argument("path"), "")) {
       String _mainFilePath = call.argument("path");
+      boolean enableTickCallback = call.argument("enableTickCallback");
       metronome = new Metronome(context, _mainFilePath);
-      if (enableTickCallback) {
+      if (enableTickCallback && eventTickSink!=null){
         metronome.enableTickCallback(eventTickSink);
       }
       setVolume(call);

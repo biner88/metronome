@@ -36,6 +36,7 @@ class _MyAppState extends State<MyApp> {
       'assets/audio/snare44_wav.wav',
       bpm: bpm,
       volume: vol,
+      enableTickCallback: true,
     );
     _metronomePlugin.onListenTick((_) {
       if (kDebugMode) {

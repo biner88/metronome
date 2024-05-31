@@ -16,6 +16,7 @@ class MethodChannelMetronome extends MetronomePlatform {
     int bpm = 120,
     int volume = 50,
     bool enableSession = true,
+    bool enableTickCallback = false,
   }) async {
     if (mainPath == '') {
       throw Exception('Main path cannot be empty');
@@ -32,6 +33,7 @@ class MethodChannelMetronome extends MetronomePlatform {
         'bpm': bpm,
         'volume': volume / 100.0,
         'enableSession': enableSession,
+        'enableTickCallback': enableTickCallback,
       });
     } catch (e) {
       if (kDebugMode) {
@@ -194,7 +196,6 @@ class MethodChannelMetronome extends MetronomePlatform {
 
   @override
   void onListenTick(onEvent) {
-    methodChannel.invokeMethod<void>('enableTickCallback');
     eventTickChannel.receiveBroadcastStream().listen(onEvent);
   }
 }

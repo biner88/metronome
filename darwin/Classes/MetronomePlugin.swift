@@ -10,7 +10,6 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     //
     private let eventTickListener: EventTickHandler = EventTickHandler()
     private var eventTick: FlutterEventChannel?
-    private var enableTickCallback:Bool = false
     //
     init(with registrar: FlutterPluginRegistrar) {}
     //
@@ -66,17 +65,14 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
               case "destroy":
                   metronome?.destroy()
                 break;
-              case "enableTickCallback":
-                enableTickCallback = true;
-                break;
               default:
                   result("unkown")
                 break;
         }
     }
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-       channel?.setMethodCallHandler(nil)
-       eventTick?.setStreamHandler(nil)
+        channel?.setMethodCallHandler(nil)
+        eventTick?.setStreamHandler(nil)
     }
     private func setBPM( attributes:NSDictionary?) {
         if metronome != nil {
@@ -87,8 +83,11 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
     private func metronomeInit( attributes:NSDictionary?) {
         let mainFilePath: String = (attributes?["path"] as? String) ?? ""
         let mainFileUrl = URL(fileURLWithPath: mainFilePath);
-        let enableSession: Bool = (attributes?["enableSession"] as? Bool) ?? true
+       
+
         if mainFilePath != "" {
+            let enableSession: Bool = (attributes?["enableSession"] as? Bool) ?? true
+            let enableTickCallback: Bool = (attributes?["enableTickCallback"] as? Bool) ?? true
             metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl,enableSession:enableSession)
             if(enableTickCallback){
                 metronome?.enableTickCallback(_eventTickSink: eventTickListener);

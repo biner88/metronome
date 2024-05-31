@@ -19,12 +19,18 @@ class Metronome {
     int bpm = 120,
     int volume = 50,
     bool enableSession = true,
+    bool enableTickCallback = false,
   }) async {
     if (!PlatformUtils.isWeb) {
       mainPath = await saveAudioAssetsToLocal(mainPath);
     }
-    MetronomePlatform.instance
-        .init(mainPath, bpm: bpm, volume: volume, enableSession: enableSession);
+    MetronomePlatform.instance.init(
+      mainPath,
+      bpm: bpm,
+      volume: volume,
+      enableSession: enableSession,
+      enableTickCallback: enableTickCallback,
+    );
   }
 
   ///play the metronome

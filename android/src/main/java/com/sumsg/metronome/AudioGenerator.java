@@ -24,9 +24,9 @@ public class AudioGenerator {
 
     public void createPlayer(Context context, float volume) {
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                sampleRate, AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT, sampleRate,
-                AudioTrack.MODE_STREAM);
+            sampleRate, AudioFormat.CHANNEL_OUT_MONO,
+            AudioFormat.ENCODING_PCM_16BIT, sampleRate,
+            AudioTrack.MODE_STREAM);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             audioTrack.setVolume(volume);
         }

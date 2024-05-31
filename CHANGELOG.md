@@ -1,3 +1,7 @@
+## 1.1.4
+
+* Added `enableTickCallback` parameter in init, onTick will be called only when onListenTick is true
+
 ## 1.1.3
 
 * Update example

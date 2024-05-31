@@ -28,6 +28,7 @@ abstract class MetronomePlatform extends PlatformInterface {
     int bpm = 120,
     int volume = 50,
     bool enableSession = true,
+    bool enableTickCallback = false,
   }) {
     throw UnimplementedError('init() has not been implemented.');
   }
