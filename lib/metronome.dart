@@ -11,7 +11,7 @@ class Metronome {
   /// @param accentedPath: the path of the accented audio file, default null
   /// @param bpm: the beats per minute, default `120`
   /// @param volume: the volume of the metronome, default `50`%
-  /// @param enableSession: default `true`, only works on IOS
+  /// @param enableSession: default `true`, When set to true, the music of other apps will stop when the metronome is played. only works on IOS
   /// ```
   Future<void> init(
     String mainPath, {

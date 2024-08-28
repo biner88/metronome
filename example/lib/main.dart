@@ -7,7 +7,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -36,6 +36,7 @@ class _MyAppState extends State<MyApp> {
       'assets/audio/snare44_wav.wav',
       bpm: bpm,
       volume: vol,
+      enableSession: true,
       enableTickCallback: true,
     );
     _metronomePlugin.onListenTick((_) {

@@ -22,7 +22,9 @@ final metronome = Metronome();
 metronome.init('
     assets/audio/snare.wav', 
     bpm: 120, 
-    volume: 50, 
+    volume: 50,  
+    //When set to true, the music of other apps will stop when the metronome is played. 
+    enableSession: true,
     enableTickCallback: true,
 );
 ```
