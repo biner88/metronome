@@ -1,9 +1,13 @@
 ## 2.0.0
 
-* Add time signature
-* Add sampleRate
+* Add time signature [#2](https://github.com/biner88/metronome/issues/2)
+* Add `sampleRate` parameter
+* Add [Live preview](https://biner88.github.io/metronome/)
 * Add windows support
 * Add CallBack function on Tick for web
+* Refactoring for MacOS, IOS, Android, Web
+* Deprecated `onListenTick`, use `tickStream` instead
+* Remove BPM parameter from `play()` method
 * Update example
 
 ## 1.1.5

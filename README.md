@@ -2,7 +2,11 @@
 
 [![pub package](https://img.shields.io/pub/v/metronome.svg)](https://pub.dev/packages/metronome)
 
-Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio source settings.
+Efficient, accurate, cross-platform metronome; 
+supports volume, BPM, time signature and audio source settings.
+
+**Version 2.0 refactored most of the code, with better performance (BPM>600), less resource usage, and more accurate time signature callback.**
+
 ##
 
 ![Metronome](https://raw.githubusercontent.com/biner88/metronome/main/screenshot/demo2.png)
@@ -14,8 +18,8 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 ## TODO
 
 * [x] Add support for time signature [#2](https://github.com/biner88/metronome/issues/2)
-* [x] Add Windows support
-* [x] Add CallBack function on Tick for web
+* [x] Add windows support
+* [x] Add tickCallback for web
 
 ## Quick Start 
 
@@ -23,13 +27,13 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 
 ```dart
 final metronome = Metronome();
-metronome.init('
-    assets/audio/snare.wav', 
+metronome.init(
+    'assets/audio/snare.wav', 
     accentedPath: 'assets/audio/claves44_wav.wav',
     bpm: 120, 
     volume: 50,  
     //When set to true, the music of other apps will stop when the metronome is played. 
-    enableSession: true,
+    enableSession: false,
     enableTickCallback: true,
     // The time signature is the number of beats per measure,default is 0, disabled.
     timeSignature: 4,
@@ -78,7 +82,9 @@ metronome.setTimeSignature(4);
 metronome.getTimeSignature(); 
 ```
 
-### get Play state
+### isPlaying
+
+Get play state
 
 ```dart
 metronome.isPlaying();
