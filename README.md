@@ -7,6 +7,10 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 
 ![Metronome](https://raw.githubusercontent.com/biner88/metronome/main/screenshot/demo2.png)
 
+## Demo
+
+[Live preview](https://biner88.github.io/metronome/)
+
 ## TODO
 
 * [x] Add support for time signature [#2](https://github.com/biner88/metronome/issues/2)
