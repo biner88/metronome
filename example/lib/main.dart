@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:metronome/metronome.dart';
 
@@ -18,39 +17,39 @@ class _MyAppState extends State<MyApp> {
   bool isplaying = false;
   int bpm = 120;
   int vol = 50;
+  int timeSignature = 4;
   String metronomeIcon = 'assets/metronome-left.png';
   String metronomeIconRight = 'assets/metronome-right.png';
   String metronomeIconLeft = 'assets/metronome-left.png';
-  final List wavs = [
-    'base',
-    'claves',
-    'hihat',
-    'snare',
-    'sticks',
-    'woodblock_high'
-  ];
+  final List wavs = ['base', 'claves', 'hihat', 'snare', 'sticks', 'woodblock_high'];
+  String mainFileName = 'claves';
+  String accentedFileName = 'woodblock_high';
+  int currentTick = 0;
   @override
   void initState() {
     super.initState();
     _metronomePlugin.init(
-      'assets/audio/snare44_wav.wav',
+      'assets/audio/${mainFileName}44_wav.wav',
+      accentedPath: 'assets/audio/${accentedFileName}44_wav.wav',
       bpm: bpm,
       volume: vol,
       enableSession: true,
       enableTickCallback: true,
+      timeSignature: timeSignature,
+      sampleRate: 44100,
     );
-    _metronomePlugin.onListenTick((_) {
-      if (kDebugMode) {
-        print('tick');
-      }
-      setState(() {
+    _metronomePlugin.tickStream.listen(
+      (int tick) {
+        currentTick = tick;
+        print("tick: $tick");
         if (metronomeIcon == metronomeIconRight) {
           metronomeIcon = metronomeIconLeft;
         } else {
           metronomeIcon = metronomeIconRight;
         }
-      });
-    });
+        setState(() {});
+      },
+    );
   }
 
   @override
@@ -76,6 +75,16 @@ class _MyAppState extends State<MyApp> {
                 height: 100,
                 gaplessPlayback: true,
               ),
+              if (timeSignature > 1)
+                SizedBox(
+                  height: 60,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 0; i < timeSignature; i++) _buildCircle(i),
+                    ],
+                  ),
+                ),
               Text(
                 'BPM:$bpm',
                 style: const TextStyle(fontSize: 20),
@@ -83,13 +92,14 @@ class _MyAppState extends State<MyApp> {
               Slider(
                 value: bpm.toDouble(),
                 min: 30,
-                max: 300,
-                divisions: 270,
+                max: 600,
+                divisions: 570,
                 onChangeEnd: (val) {
                   _metronomePlugin.setBPM(bpm);
                 },
                 onChanged: (val) {
                   bpm = val.toInt();
+                  currentTick = 0;
                   setState(() {});
                 },
               ),
@@ -110,46 +120,127 @@ class _MyAppState extends State<MyApp> {
                   setState(() {});
                 },
               ),
-              SizedBox(
-                width: 200,
-                height: 350,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: wavs
-                      .map(
-                        (wav) => ElevatedButton(
-                          child: Text(wav),
-                          onPressed: () {
-                            _metronomePlugin.setAudioAssets(
-                                'assets/audio/${wav}44_wav.wav');
-                          },
-                        ),
-                      )
-                      .toList(),
-                ),
+              const Text(
+                'Time Signature:',
+                style: TextStyle(fontSize: 20),
+              ),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  _buildTimeSignButton('1/4', 1),
+                  _buildTimeSignButton('2/4', 2),
+                  _buildTimeSignButton('3/4', 3),
+                  _buildTimeSignButton('4/4', 4),
+                ],
+              ),
+              const Text(
+                'Main file:',
+                style: TextStyle(fontSize: 20),
+              ),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: wavs.map((wav) => _buildMainButton(wav)).toList(),
+              ),
+              const Text(
+                'Accented file:',
+                style: TextStyle(fontSize: 20),
+              ),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: wavs.map((wav) => _buildAccentedButton(wav)).toList(),
               ),
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
+            currentTick = 0;
             if (isplaying) {
               _metronomePlugin.pause();
               isplaying = false;
             } else {
-              _metronomePlugin.setVolume(vol);
-              _metronomePlugin.play(bpm);
+              _metronomePlugin.play();
               isplaying = true;
             }
-            // int? bpm2 = await _metronomePlugin.getBPM();
-            // print(bpm2);
-            // int? vol2 = await _metronomePlugin.getVolume();
-            // print(vol2);
             setState(() {});
           },
           child: Icon(isplaying ? Icons.pause : Icons.play_arrow),
         ),
       ),
+    );
+  }
+
+  Widget _buildCircle(int index) {
+    bool tick = currentTick == index;
+    return Container(
+      width: 35,
+      height: 35,
+      margin: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: tick ? 20 : 15,
+            height: tick ? 20 : 15,
+            decoration: BoxDecoration(
+              color: tick ? Colors.red : Colors.white,
+              borderRadius: BorderRadius.circular(tick ? 15 : 10),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAccentedButton(String name) {
+    return ElevatedButton(
+      child: Text(
+        name,
+        style: TextStyle(color: accentedFileName == name ? Colors.red : null),
+      ),
+      onPressed: () {
+        accentedFileName = name;
+        currentTick = 0;
+        _metronomePlugin.setAudioFile(accentedPath: 'assets/audio/${name}44_wav.wav');
+        setState(() {});
+      },
+    );
+  }
+
+  Widget _buildMainButton(String name) {
+    return ElevatedButton(
+      child: Text(
+        name,
+        style: TextStyle(color: mainFileName == name ? Colors.red : null),
+      ),
+      onPressed: () {
+        mainFileName = name;
+        currentTick = 0;
+        _metronomePlugin.setAudioFile(mainPath: 'assets/audio/${name}44_wav.wav');
+        setState(() {});
+      },
+    );
+  }
+
+  Widget _buildTimeSignButton(String text, int ts) {
+    return ElevatedButton(
+      child: Text(
+        text,
+        style: TextStyle(color: ts == timeSignature ? Colors.red : null),
+      ),
+      onPressed: () {
+        currentTick = 0;
+        timeSignature = ts;
+        _metronomePlugin.setTimeSignature(ts);
+        setState(() {});
+      },
     );
   }
 }

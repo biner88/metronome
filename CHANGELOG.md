@@ -1,3 +1,11 @@
+## 2.0.0
+
+* Add time signature
+* Add sampleRate
+* Add windows support
+* Add CallBack function on Tick for web
+* Update example
+
 ## 1.1.5
 
 * Update readme

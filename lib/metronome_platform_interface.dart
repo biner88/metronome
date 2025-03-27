@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'metronome_method_channel.dart';
@@ -23,17 +25,22 @@ abstract class MetronomePlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  final StreamController<int> tickController = StreamController<int>.broadcast();
+
   Future<void> init(
     String mainPath, {
+    String accentedPath = '',
     int bpm = 120,
     int volume = 50,
     bool enableSession = true,
     bool enableTickCallback = false,
+    int timeSignature = 4,
+    int sampleRate = 44100,
   }) {
     throw UnimplementedError('init() has not been implemented.');
   }
 
-  Future<void> play(int bpm) {
+  Future<void> play() {
     throw UnimplementedError('play() has not been implemented.');
   }
 
@@ -57,12 +64,11 @@ abstract class MetronomePlatform extends PlatformInterface {
     throw UnimplementedError('isPlaying() has not been implemented.');
   }
 
-  Future<void> setAudioFile(String mainPath) {
+  Future<void> setAudioFile({
+    String mainPath = '',
+    String accentedPath = '',
+  }) {
     throw UnimplementedError('setAudioFile() has not been implemented.');
-  }
-
-  Future<void> setAudioAssets(String mainPath) {
-    throw UnimplementedError('setAudioAssets() has not been implemented.');
   }
 
   Future<void> setBPM(int bpm) {
@@ -73,16 +79,19 @@ abstract class MetronomePlatform extends PlatformInterface {
     throw UnimplementedError('getBPM() has not been implemented.');
   }
 
-  Future<void> saveAudioAssetsToLocal(String mainPath) {
-    throw UnimplementedError(
-        'saveAudioAssetsToLocal() has not been implemented.');
+  Future<void> setTimeSignature(int timeSignature) {
+    throw UnimplementedError('setTimeSignature() has not been implemented.');
+  }
+
+  Future<int?> getTimeSignature() {
+    throw UnimplementedError('getTimeSignature() has not been implemented.');
   }
 
   Future<void> destroy() {
     throw UnimplementedError('destroy() has not been implemented.');
   }
 
-  void onListenTick(onEvent) {
+  Stream<dynamic> onListenTick(onEvent) {
     throw UnimplementedError('onListenTick() has not been implemented.');
   }
 }

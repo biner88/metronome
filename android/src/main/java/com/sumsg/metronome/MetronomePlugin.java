@@ -1,9 +1,6 @@
 package com.sumsg.metronome;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
-import java.util.Objects;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
@@ -26,13 +23,11 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
   // private final String TAG = "metronome";
   /// Metronome
   private Metronome metronome = null;
-  private Context context;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "metronome");
     channel.setMethodCallHandler(this);
-    context = flutterPluginBinding.getApplicationContext();
     //
     eventTick = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
         "metronome_tick");
@@ -56,10 +51,7 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
         metronomeInit(call);
         break;
       case "play":
-        Integer _bpm = call.argument("bpm");
-        if (_bpm == null)
-          _bpm = 120;
-        metronome.play(_bpm);
+        metronome.play();
         break;
       case "pause":
         metronome.pause();
@@ -68,7 +60,7 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
         metronome.stop();
         break;
       case "getVolume":
-        result.success(metronome.getVolume());
+        result.success(metronome.audioVolume);
         break;
       case "setVolume":
         setVolume(call);
@@ -80,7 +72,13 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
         setBPM(call);
         break;
       case "getBPM":
-        result.success(metronome.getBPM());
+        result.success(metronome.audioBpm);
+        break;
+      case "setTimeSignature":
+        setTimeSignature(call);
+        break;
+      case "getTimeSignature":
+        result.success(metronome.audioTimeSignature);
         break;
       case "setAudioFile":
         setAudioFile(call);
@@ -96,21 +94,37 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    context = null;
     channel.setMethodCallHandler(null);
     eventTick.setStreamHandler(null);
   }
 
   private void metronomeInit(@NonNull MethodCall call) {
-    if (!Objects.equals(call.argument("path"), "")) {
-      String _mainFilePath = call.argument("path");
-      boolean enableTickCallback = call.argument("enableTickCallback");
-      metronome = new Metronome(context, _mainFilePath);
-      if (enableTickCallback && eventTickSink!=null){
-        metronome.enableTickCallback(eventTickSink);
-      }
-      setVolume(call);
-      setBPM(call);
+    byte[] mainFileBytes = call.argument("mainFileBytes");
+    if (mainFileBytes == null) {
+      mainFileBytes = new byte[0];
+    }
+    byte[] accentedFileBytes = call.argument("accentedFileBytes");
+    if (accentedFileBytes == null) {
+      accentedFileBytes = new byte[0];
+    }
+    boolean enableTickCallback = Boolean.TRUE.equals(call.argument("enableTickCallback"));
+
+    Integer timeSignature = call.argument("timeSignature");
+    int timeSignatureValue = (timeSignature != null) ? timeSignature : 0;
+
+    Integer bpmValue = call.argument("bpm");
+    int bpm = (bpmValue != null) ? bpmValue : 120;
+
+    Double volumeValue = call.argument("volume");
+    float volume = (volumeValue != null) ? volumeValue.floatValue() : 0.5F;
+
+    Integer sampleRateValue = call.argument("sampleRate");
+    int sampleRate = (sampleRateValue != null) ? sampleRateValue : 44100;
+
+    metronome = new Metronome(mainFileBytes, accentedFileBytes, bpm, timeSignatureValue, volume, sampleRate);
+
+    if (enableTickCallback && eventTickSink != null) {
+      metronome.enableTickCallback(eventTickSink);
     }
   }
 
@@ -133,9 +147,27 @@ public class MetronomePlugin implements FlutterPlugin, MethodCallHandler {
     }
   }
 
+  private void setTimeSignature(@NonNull MethodCall call) {
+    if (metronome != null) {
+      Integer _timeSignature = call.argument("timeSignature");
+      if (_timeSignature != null) {
+        metronome.setTimeSignature(_timeSignature);
+      }
+    }
+  }
+
   private void setAudioFile(@NonNull MethodCall call) {
     if (metronome != null) {
-      metronome.setAudioFile(call.argument("path"));
+      byte[] mainFileBytes = call.argument("mainFileBytes");
+      byte[] accentedFileBytes = call.argument("accentedFileBytes");
+
+      if (mainFileBytes == null) {
+        mainFileBytes = new byte[0];
+      }
+      if (accentedFileBytes == null) {
+        accentedFileBytes = new byte[0];
+      }
+      metronome.setAudioFile(mainFileBytes, accentedFileBytes);
     }
   }
 }

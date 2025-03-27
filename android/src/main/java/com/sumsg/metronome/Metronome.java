@@ -1,144 +1,215 @@
 package com.sumsg.metronome;
 
-import android.content.Context;
-import android.os.Build;
-import android.util.Log;
+import static android.media.AudioTrack.PLAYSTATE_PLAYING;
 
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.os.Build;
+
+import android.media.AudioAttributes;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import io.flutter.plugin.common.EventChannel;
 
 public class Metronome {
     private final Object mLock = new Object();
-    private int mBpm = 120;
-    private static final int SAMPLE_RATE = 44100;
-    private boolean play = false;
-    private final AudioGenerator audioGenerator = new AudioGenerator(SAMPLE_RATE);
-    private short[] mTookSilenceSoundArray;
-    private AudioGenerator.Sample mTook;
-    private int mBeatDivisionSampleCount;
-    private float mVolume = (float) 0.0;
-    private final Context context;
-    private BeatTimer beatTimer;
+    private final AudioTrack audioTrack;
+    private short[] mainSound;
+    private short[] accentedSound;
+    private short[] audioBuffer;
+    private final int SAMPLE_RATE;
+    public int audioBpm;
+    public int audioTimeSignature;
+    public float audioVolume;
+    private boolean updated = false;
+    private EventChannel.EventSink eventTickSink;
+    private int currentTick = 0;
 
-    public Metronome(Context ctx, String mainFile) {
-        context = ctx;
-        setAudioFile(mainFile);
-    }
-
-    public void setAudioFile(String path) {
-        mTook = AudioGenerator.loadSampleFromWav(path);
-        if (play) {
-            stop();
-            play(mBpm);
+    @SuppressWarnings("deprecation")
+    public Metronome(byte[] mainFileBytes, byte[] accentedFileBytes, int bpm, int timeSignature, float volume,
+            int sampleRate) {
+        SAMPLE_RATE = sampleRate;
+        audioBpm = bpm;
+        audioVolume = volume;
+        audioTimeSignature = timeSignature;
+        mainSound = byteArrayToShortArray(mainFileBytes);
+        if (accentedFileBytes.length == 0) {
+            accentedSound = mainSound;
+        } else {
+            accentedSound = byteArrayToShortArray(accentedFileBytes);
         }
-    }
-
-    public void enableTickCallback(EventChannel.EventSink _eventTickSink) {
-        beatTimer = new BeatTimer(_eventTickSink);
-    }
-
-    public void calcSilence() {
-        // (beats per second * SAMPLE_RATE) - NumberOfSamples
-        mBeatDivisionSampleCount = (int) (((60 / (float) mBpm) * SAMPLE_RATE));
-        int silence = Math.max(mBeatDivisionSampleCount - mTook.getSampleCount(), 0);
-        mTookSilenceSoundArray = new short[silence];
-
-        for (int i = 0; i < silence; i++)
-            mTookSilenceSoundArray[i] = 0;
-    }
-
-    private void isInitialized() {
-        if (mTook == null) {
-            throw new IllegalStateException("Not initialized correctly");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            AudioFormat audioFormat = new AudioFormat.Builder()
+                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                    .setSampleRate(SAMPLE_RATE)
+                    .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                    .build();
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+            audioTrack = new AudioTrack.Builder()
+                    .setAudioAttributes(audioAttributes)
+                    .setAudioFormat(audioFormat)
+                    .setTransferMode(AudioTrack.MODE_STREAM)
+                    // .setBufferSizeInBytes(SAMPLE_RATE)
+                    // .setBufferSizeInBytes(SAMPLE_RATE * 2)
+                    .build();
+        } else {
+            audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT, SAMPLE_RATE, AudioTrack.MODE_STREAM);
         }
+        setVolume(volume);
     }
 
-    public void play(int bpm) {
-        isInitialized();
-        setBPM(bpm);
-        play = true;
-        audioGenerator.createPlayer(context, mVolume);
-        calcSilence();
-        new Thread(() -> {
-            do {
-                short[] sample = (short[]) mTook.getSample();
-                audioGenerator.writeSound(sample, Math.min(sample.length, mBeatDivisionSampleCount));
-                audioGenerator.writeSound(mTookSilenceSoundArray);
-                synchronized (mLock) {
-                    if (!play)
-                        return;
-                }
-            } while (true);
-        }).start();
-        //
-        if (beatTimer != null) {
-            beatTimer.startBeatTimer(bpm);
+    public void play() {
+        if (!isPlaying()) {
+            updated = true;
+            onTick();
+            audioTrack.play();
+            startMetronome();
         }
     }
 
     public void pause() {
-        if (audioGenerator.getAudioTrack() != null) {
-            play = false;
-            audioGenerator.getAudioTrack().pause();
-        }
-        if (beatTimer != null) {
-            beatTimer.stopBeatTimer();
-        }
+        audioTrack.pause();
     }
 
     public void stop() {
-        if (audioGenerator.getAudioTrack() != null) {
-            play = false;
-            audioGenerator.destroyAudioTrack();
-        }
-        if (beatTimer != null) {
-            beatTimer.stopBeatTimer();
-        }
-    }
-
-    public int getVolume() {
-        return (int) (mVolume * 100);
-    }
-
-    public void setVolume(float val) {
-        mVolume = val;
-        if (audioGenerator.getAudioTrack() != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                try {
-                    audioGenerator.getAudioTrack().setVolume(mVolume);
-                } catch (Exception e) {
-                    Log.e("setVolume", String.valueOf(e));
-                }
-            }
-        }
+        audioTrack.flush();
+        audioTrack.stop();
     }
 
     public void setBPM(int bpm) {
-        mBpm = bpm;
-        calcSilence();
-        if (play) {
-            if (beatTimer != null) {
-                beatTimer.startBeatTimer(bpm);
+        if (bpm != audioBpm) {
+            audioBpm = bpm;
+            if (isPlaying()) {
+                pause();
+                play();
             }
         }
     }
 
-    public double getBPM() {
-        return mBpm;
+    public void setTimeSignature(int timeSignature) {
+        if (timeSignature != audioTimeSignature) {
+            audioTimeSignature = timeSignature;
+            if (isPlaying()) {
+                pause();
+                play();
+            }
+        }
+    }
+
+    public void setAudioFile(byte[] mainFileBytes, byte[] accentedFileBytes) {
+        if (mainFileBytes.length > 0) {
+            mainSound = byteArrayToShortArray(mainFileBytes);
+        }
+        if (accentedFileBytes.length > 0) {
+            accentedSound = byteArrayToShortArray(accentedFileBytes);
+        }
+        if (mainFileBytes.length > 0 || accentedFileBytes.length > 0) {
+            if (isPlaying()) {
+                pause();
+                play();
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    public void setVolume(float volume) {
+        audioVolume = volume;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            audioTrack.setVolume(volume);
+        } else {
+            audioTrack.setStereoVolume(volume, volume);
+        }
     }
 
     public boolean isPlaying() {
-        return play;
+        return audioTrack.getPlayState() == PLAYSTATE_PLAYING;
+    }
+
+    public void enableTickCallback(EventChannel.EventSink _eventTickSink) {
+        eventTickSink = _eventTickSink;
+    }
+
+    private short[] byteArrayToShortArray(byte[] byteArray) {
+        if (byteArray == null || byteArray.length % 2 != 0) {
+            throw new IllegalArgumentException("Invalid byte array length for PCM_16BIT");
+        }
+        short[] shortArray = new short[byteArray.length / 2];
+        ByteBuffer.wrap(byteArray).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shortArray);
+        return shortArray;
+    }
+
+    private short[] generateBuffer() {
+        currentTick = 0;
+        int framesPerBeat = (int) (SAMPLE_RATE * 60 / (float) audioBpm);
+        short[] bufferBar;
+        if (audioTimeSignature < 2) {
+            bufferBar = new short[framesPerBeat];
+            int soundLength = Math.min(framesPerBeat, mainSound.length);
+            System.arraycopy(mainSound, 0, bufferBar, 0, soundLength);
+        } else {
+            int bufferSize = framesPerBeat * audioTimeSignature;
+            bufferBar = new short[bufferSize];
+            for (int i = 0; i < audioTimeSignature; i++) {
+                short[] sound = (i == 0) ? accentedSound : mainSound;
+                int soundLength = Math.min(framesPerBeat, sound.length);
+                System.arraycopy(sound, 0, bufferBar, i * framesPerBeat, soundLength);
+            }
+        }
+        updated = false;
+        return bufferBar;
+    }
+
+    void onTick() {
+        if (eventTickSink == null)
+            return;
+        int framesPerBeat = (int) ((SAMPLE_RATE * 60.0) / audioBpm);
+        audioTrack.setPositionNotificationPeriod(framesPerBeat);
+        audioTrack.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
+            @Override
+            public void onMarkerReached(AudioTrack track) {
+            }
+
+            @Override
+            public void onPeriodicNotification(AudioTrack track) {
+                if (!updated) {
+                    if (audioTimeSignature < 2) {
+                        currentTick = 0;
+                    } else {
+                        currentTick++;
+                        if (currentTick >= audioTimeSignature)
+                            currentTick = 0;
+                    }
+                    eventTickSink.success(currentTick);
+                }
+            }
+        });
+    }
+
+    private void startMetronome() {
+        new Thread(() -> {
+            while (isPlaying()) {
+                synchronized (mLock) {
+                    if (!isPlaying()) {
+                        return;
+                    }
+                    if (updated) {
+                        audioBuffer = generateBuffer();
+                    } else {
+                        audioTrack.write(audioBuffer, 0, audioBuffer.length);
+                    }
+                }
+            }
+        }).start();
     }
 
     public void destroy() {
-        if (beatTimer != null) {
-            beatTimer.stopBeatTimer();
-        }
-        if (!play)
-            return;
         stop();
-        synchronized (mLock) {
-            mBeatDivisionSampleCount = 0;
-        }
+        audioTrack.release();
     }
 }

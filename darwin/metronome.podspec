@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'metronome'
-  s.version          = '1.0.6'
+  s.version          = '1.0.7'
   s.summary          = 'Metronome'
   s.description      = <<-DESC
 Metronome

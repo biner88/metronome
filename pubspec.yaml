@@ -1,6 +1,6 @@
 name: metronome
 description: Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio source settings.
-version: 1.1.5
+version: 2.0.0
 homepage: https://github.com/biner88/metronome
 issue_tracker: https://github.com/biner88/metronome/issues
 screenshots:
@@ -19,8 +19,8 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   plugin_platform_interface: ^2.1.8
-  path_provider: ^2.1.4
-  
+  path_provider: ^2.1.5
+  web: ^1.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -52,10 +52,11 @@ flutter:
       macos:
         pluginClass: MetronomePlugin
         sharedDarwinSource: true
+      windows:
+        pluginClass: MetronomePluginCApi
       web:
         pluginClass: MetronomeWeb
         fileName: metronome_web.dart
-
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

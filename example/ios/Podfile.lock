@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - metronome (1.0.6):
+  - metronome (1.0.7):
     - Flutter
     - FlutterMacOS
   - path_provider_foundation (0.0.1):
@@ -27,10 +27,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
-  metronome: 3bddfed82ec81b9243d29c4364b60c406a2179b1
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  metronome: e8e61647127088e869db8fe9512554ec77382927
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

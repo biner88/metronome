@@ -35,8 +35,7 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
                   metronomeInit(attributes: attributes)
                 break;
               case "play":
-              let bpm: Int = (attributes?["bpm"] as? Int) ?? (metronome?.audioBpm)!
-                  metronome?.play(bpm: bpm)
+                  metronome?.play()
                 break;
               case "pause":
                   metronome?.pause()
@@ -57,7 +56,13 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
                   setBPM(attributes: attributes)
                 break;
               case "getBPM":
-                  result(metronome?.getBPM ?? (metronome?.audioBpm)! )
+                  result(metronome?.audioBpm)
+                break;
+              case "setTimeSignature":
+                  setTimeSignature(attributes: attributes)
+                break;
+              case "getTimeSignature":
+                  result(metronome?.audioTimeSignature)
                 break;
               case "setAudioFile":
                   setAudioFile(attributes: attributes)
@@ -80,35 +85,45 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
             metronome?.setBPM(bpm: bpm)
         }
     }
+    private func setTimeSignature( attributes:NSDictionary?) {
+        if metronome != nil {
+            let timeSignature: Int = (attributes?["timeSignature"] as? Int) ?? 0
+            metronome?.setTimeSignature(timeSignature: timeSignature)
+        }
+    }
     private func metronomeInit( attributes:NSDictionary?) {
-        let mainFilePath: String = (attributes?["path"] as? String) ?? ""
-        let mainFileUrl = URL(fileURLWithPath: mainFilePath);
-       
-
-        if mainFilePath != "" {
-            let enableSession: Bool = (attributes?["enableSession"] as? Bool) ?? true
-            let enableTickCallback: Bool = (attributes?["enableTickCallback"] as? Bool) ?? true
-            metronome =  Metronome( mainFile: mainFileUrl,accentedFile: mainFileUrl,enableSession:enableSession)
-            if(enableTickCallback){
-                metronome?.enableTickCallback(_eventTickSink: eventTickListener);
-            }
-            setVolume(attributes: attributes)
-            setBPM(attributes: attributes)
+        let mainFileBytes = (attributes?["mainFileBytes"] as? FlutterStandardTypedData) ?? FlutterStandardTypedData()
+        let accentedFileBytes = (attributes?["accentedFileBytes"] as? FlutterStandardTypedData) ?? FlutterStandardTypedData()
+        let mainBytes: Data = mainFileBytes.data
+        let accentedBytes: Data = accentedFileBytes.data
+        
+        let enableSession: Bool = (attributes?["enableSession"] as? Bool) ?? true
+        let enableTickCallback: Bool = (attributes?["enableTickCallback"] as? Bool) ?? true
+        let timeSignature: Int = (attributes?["timeSignature"] as? Int) ?? 0
+        let bpm: Int = (attributes?["bpm"] as? Int) ?? 120
+        let volume: Float = (attributes?["volume"] as? Float) ?? 0.5
+        let sampleRate: Int = (attributes?["sampleRate"] as? Int) ?? 44100
+        metronome =  Metronome( mainFileBytes:mainBytes,accentedFileBytes: accentedBytes,bpm:bpm,timeSignature:timeSignature,volume:volume,sampleRate:sampleRate)
+        if(enableTickCallback){
+            metronome?.enableTickCallback(_eventTickSink: eventTickListener);
+        }
+        if(enableSession){
+            metronome?.enableAudioSession()
         }
     }
     private func setAudioFile( attributes:NSDictionary?) {
         if metronome != nil {
-            let mainFilePath: String = (attributes?["path"] as? String) ?? ""
-            let mainFileUrl = URL(fileURLWithPath: mainFilePath);
-            if mainFilePath != "" {
-                metronome?.setAudioFile( mainFile: mainFileUrl)
-            }
+            let mainFileBytes = (attributes?["mainFileBytes"] as? FlutterStandardTypedData) ?? FlutterStandardTypedData()
+            let accentedFileBytes = (attributes?["accentedFileBytes"] as? FlutterStandardTypedData) ?? FlutterStandardTypedData()
+            let mainBytes: Data = mainFileBytes.data
+            let accentedBytes: Data = accentedFileBytes.data
+            metronome?.setAudioFile( mainFileBytes:mainBytes,accentedFileBytes: accentedBytes)
         }
     }
     private func setVolume( attributes:NSDictionary?) {
         if metronome != nil {
             let volume: Double = (attributes?["volume"] as? Double) ?? 0.5
-            metronome?.setVolume(vol: Float(volume))
+            metronome?.setVolume(volume: Float(volume))
         }
     }
 }

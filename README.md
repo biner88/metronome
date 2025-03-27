@@ -9,9 +9,9 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 
 ## TODO
 
-* [ ] Add support for time signature [#2](https://github.com/biner88/metronome/issues/2)
-* [ ] Add Windows support
-* [ ] Add CallBack function on Tick for web
+* [x] Add support for time signature [#2](https://github.com/biner88/metronome/issues/2)
+* [x] Add Windows support
+* [x] Add CallBack function on Tick for web
 
 ## Quick Start 
 
@@ -21,11 +21,15 @@ Efficient, accurate, cross-platform metronome; supports volume, BPM, and audio s
 final metronome = Metronome();
 metronome.init('
     assets/audio/snare.wav', 
+    accentedPath: 'assets/audio/claves44_wav.wav',
     bpm: 120, 
     volume: 50,  
     //When set to true, the music of other apps will stop when the metronome is played. 
     enableSession: true,
     enableTickCallback: true,
+    // The time signature is the number of beats per measure,default is 0, disabled.
+    timeSignature: 4,
+    sampleRate: 44100,
 );
 ```
 
@@ -61,6 +65,15 @@ metronome.setBPM(120);
 metronome.getBPM(); 
 ```
 
+### TimeSignature
+
+Disable accents when less than 2
+
+```dart
+metronome.setTimeSignature(4); 
+metronome.getTimeSignature(); 
+```
+
 ### get Play state
 
 ```dart
@@ -69,8 +82,16 @@ metronome.isPlaying();
 
 ### setAudioFile
 
+main, accent can be set at the same time or individually
+
 ```dart
-metronome.setAudioFile('assets/audio/snare.wav');
+metronome.setAudioFile(
+    mainPath:'assets/audio/snare.wav',
+    accentedPath:'assets/audio/claves.wav'
+);
+metronome.setAudioFile(
+    mainPath:'assets/audio/snare.wav',
+);
 ```
 
 ### destroy
@@ -81,16 +102,10 @@ metronome.destroy();
 
 ### Tick callback
 
-```
-metronome.onListenTick((_) {
-    print('tick');
+`enableTickCallback` must be set to `true` in init
+
+```dart
+metronome.tickStream.listen((int tick) {
+  print("tick: $tick");
 });
-```
-
-## About Web
-
-Please add the `example/web/app.js` file to index.html under your web. As follows:
-
-```html
-<script src="app.js" defer></script>
 ```
