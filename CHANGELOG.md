@@ -8,6 +8,9 @@
 * Refactoring for MacOS, IOS, Android, Web
 * Deprecated `onListenTick`, use `tickStream` instead
 * Remove BPM parameter from `play()` method
+* Remove `enableSession` parameter, no need to explicitly set audio session
+* Remove IOS Media Player Widget [#16](https://github.com/biner88/metronome/issues/16)
+* Fix Bluetooth headset and default player switching error [#15](https://github.com/biner88/metronome/issues/15)
 * Update example
 
 ## 1.1.5

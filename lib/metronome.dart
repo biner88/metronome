@@ -25,7 +25,6 @@ class Metronome {
   /// @param accentedPath: the path of the accented audio file, default ''
   /// @param bpm: the beats per minute, default `120`
   /// @param volume: the volume of the metronome, default `50`%
-  /// @param enableSession: default `true`, When set to true, the music of other apps will stop when the metronome is played. only works on IOS
   /// @param timeSignature: the timeSignature of the metronome, default `4`
   /// @param sampleRate: the sampleRate of the metronome, default `44100`
   /// ```
@@ -34,7 +33,6 @@ class Metronome {
     String accentedPath = '',
     int bpm = 120,
     int volume = 50,
-    bool enableSession = true,
     bool enableTickCallback = false,
     int timeSignature = 4,
     int sampleRate = 44100,
@@ -44,7 +42,6 @@ class Metronome {
       accentedPath: accentedPath,
       bpm: bpm,
       volume: volume,
-      enableSession: enableSession,
       enableTickCallback: enableTickCallback,
       timeSignature: timeSignature,
       sampleRate: sampleRate,

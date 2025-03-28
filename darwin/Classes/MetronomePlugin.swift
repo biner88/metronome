@@ -97,7 +97,6 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         let mainBytes: Data = mainFileBytes.data
         let accentedBytes: Data = accentedFileBytes.data
         
-        let enableSession: Bool = (attributes?["enableSession"] as? Bool) ?? true
         let enableTickCallback: Bool = (attributes?["enableTickCallback"] as? Bool) ?? true
         let timeSignature: Int = (attributes?["timeSignature"] as? Int) ?? 0
         let bpm: Int = (attributes?["bpm"] as? Int) ?? 120
@@ -106,9 +105,6 @@ public class MetronomePlugin: NSObject, FlutterPlugin {
         metronome =  Metronome( mainFileBytes:mainBytes,accentedFileBytes: accentedBytes,bpm:bpm,timeSignature:timeSignature,volume:volume,sampleRate:sampleRate)
         if(enableTickCallback){
             metronome?.enableTickCallback(_eventTickSink: eventTickListener);
-        }
-        if(enableSession){
-            metronome?.enableAudioSession()
         }
     }
     private func setAudioFile( attributes:NSDictionary?) {

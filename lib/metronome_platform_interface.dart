@@ -32,7 +32,6 @@ abstract class MetronomePlatform extends PlatformInterface {
     String accentedPath = '',
     int bpm = 120,
     int volume = 50,
-    bool enableSession = true,
     bool enableTickCallback = false,
     int timeSignature = 4,
     int sampleRate = 44100,

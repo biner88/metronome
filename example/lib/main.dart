@@ -33,7 +33,6 @@ class _MyAppState extends State<MyApp> {
       accentedPath: 'assets/audio/${accentedFileName}44_wav.wav',
       bpm: bpm,
       volume: vol,
-      enableSession: true,
       enableTickCallback: true,
       timeSignature: timeSignature,
       sampleRate: 44100,

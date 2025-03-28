@@ -29,6 +29,20 @@ class Metronome {
         }else{
             audioFileAccented = try! AVAudioFile(fromData: accentedFileBytes)
         }
+#if os(iOS)
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(
+                .playAndRecord,
+                mode: .default,
+                options: [.allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker]
+            )
+            
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to set audio session category: \(error)")
+        }
+#endif
         // Initialize audio engine and player node
         audioEngine.attach(audioPlayerNode)
         // Set up mixer node
@@ -41,12 +55,16 @@ class Metronome {
         if !self.audioEngine.isRunning {
             do {
                 try self.audioEngine.start()
+                print("Start the audio engine")
             } catch {
                 print("Failed to start audio engine: \(error.localizedDescription)")
             }
         }
         // Set volume
         setVolume(volume:volume)
+#if os(iOS)
+        setupNotifications()
+#endif
     }
     /// Start the metronome.
     func play() {
@@ -87,7 +105,6 @@ class Metronome {
                 play()
             }
         }
-       
     }
     
     func setAudioFile(mainFileBytes: Data, accentedFileBytes: Data) {
@@ -126,23 +143,48 @@ class Metronome {
     public func enableTickCallback(_eventTickSink: EventTickHandler) {
         self.eventTick = _eventTickSink
     }
-    
-    /// Enable the Audio Session
-    public func enableAudioSession() {
-#if os(iOS)
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playAndRecord, options: [.defaultToSpeaker, .allowAirPlay, .allowBluetoothA2DP])
-            try session.setActive(true)
-        } catch {
-            print("Failed to set audio session category: \(error)")
+  
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: nil,
+            queue: .main,
+            using: handleInterruption
+        )
+        NotificationCenter.default.addObserver(
+            forName: AVAudioSession.routeChangeNotification,
+            object: nil,
+            queue: .main,
+            using: handleRouteChange
+        )
+    }
+
+    private func handleInterruption(_ notification: Notification) {
+        if isPlaying {
+            pause()
         }
-        UIApplication.shared.beginReceivingRemoteControlEvents()
-#endif
+    }
+
+    private func handleRouteChange(_ notification: Notification) {
+        let wasPlaying = isPlaying
+        if wasPlaying {
+            pause()
+        }
+        if !self.audioEngine.isRunning {
+            do {
+                 audioPlayerNode.stop()
+                try audioEngine.start()
+                 audioPlayerNode.play()
+            } catch {
+                print("Failed to start audio engine: \(error.localizedDescription)")
+            }
+        }
+        if wasPlaying {
+            play()
+        }
     }
     /// Generate buffer with accents based on time signature
     private func generateBuffer() -> AVAudioPCMBuffer {
-       
         audioFileMain.framePosition = 0
         audioFileAccented.framePosition = 0
 

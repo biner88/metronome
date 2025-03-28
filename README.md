@@ -31,11 +31,10 @@ metronome.init(
     'assets/audio/snare.wav', 
     accentedPath: 'assets/audio/claves44_wav.wav',
     bpm: 120, 
+    //0 ~ 100
     volume: 50,  
-    //When set to true, the music of other apps will stop when the metronome is played. 
-    enableSession: false,
     enableTickCallback: true,
-    // The time signature is the number of beats per measure,default is 0, disabled.
+    // The time signature is the number of beats per measure,default is 4
     timeSignature: 4,
     sampleRate: 44100,
 );
