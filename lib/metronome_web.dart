@@ -50,7 +50,8 @@ class MetronomeWeb extends MetronomePlatform {
   }) async {
     _sampleRate = sampleRate;
     _audioContext = web.AudioContext(
-      web.AudioContextOptions(latencyHint: 'interactive'.toJS, sampleRate: _sampleRate.toDouble()),
+      web.AudioContextOptions(
+          latencyHint: 'interactive'.toJS, sampleRate: _sampleRate.toDouble()),
     );
     _mainSoundBuffer = await _bytesToAudioBuffer(mainPath);
     if (mainPath == '') {
@@ -211,13 +212,15 @@ class MetronomeWeb extends MetronomePlatform {
     }
     final jsArrayBuffer = byteData.buffer;
     // print(await audioBuffer.toDart.then((value) => value.duration));
-    final web.AudioBuffer audioBuffer = await _audioContext!.decodeAudioData(jsArrayBuffer as dynamic).toDart;
+    final web.AudioBuffer audioBuffer =
+        await _audioContext!.decodeAudioData(jsArrayBuffer as dynamic).toDart;
     return _convertAudioFormat(audioBuffer);
   }
 
   Future<web.AudioBuffer> _convertAudioFormat(web.AudioBuffer original) async {
     final framesPerBeat = (_sampleRate * 60 / _bpm).round();
-    final newBuffer = _audioContext!.createBuffer(channels, framesPerBeat, _sampleRate.toDouble());
+    final newBuffer = _audioContext!
+        .createBuffer(channels, framesPerBeat, _sampleRate.toDouble());
     final newChannel = newBuffer.getChannelData(0).toDart;
     const scaleFactor = 32767.0;
     const inverseScale = 1.0 / scaleFactor;

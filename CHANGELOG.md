@@ -1,3 +1,8 @@
+## 2.0.1
+
+* Fix pub points
+* remove path_provider dependency
+
 ## 2.0.0
 
 * Add time signature [#2](https://github.com/biner88/metronome/issues/2)

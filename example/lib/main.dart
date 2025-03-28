@@ -21,7 +21,14 @@ class _MyAppState extends State<MyApp> {
   String metronomeIcon = 'assets/metronome-left.png';
   String metronomeIconRight = 'assets/metronome-right.png';
   String metronomeIconLeft = 'assets/metronome-left.png';
-  final List wavs = ['base', 'claves', 'hihat', 'snare', 'sticks', 'woodblock_high'];
+  final List wavs = [
+    'base',
+    'claves',
+    'hihat',
+    'snare',
+    'sticks',
+    'woodblock_high'
+  ];
   String mainFileName = 'claves';
   String accentedFileName = 'woodblock_high';
   int currentTick = 0;
@@ -207,7 +214,8 @@ class _MyAppState extends State<MyApp> {
       onPressed: () {
         accentedFileName = name;
         currentTick = 0;
-        _metronomePlugin.setAudioFile(accentedPath: 'assets/audio/${name}44_wav.wav');
+        _metronomePlugin.setAudioFile(
+            accentedPath: 'assets/audio/${name}44_wav.wav');
         setState(() {});
       },
     );
@@ -222,7 +230,8 @@ class _MyAppState extends State<MyApp> {
       onPressed: () {
         mainFileName = name;
         currentTick = 0;
-        _metronomePlugin.setAudioFile(mainPath: 'assets/audio/${name}44_wav.wav');
+        _metronomePlugin.setAudioFile(
+            mainPath: 'assets/audio/${name}44_wav.wav');
         setState(() {});
       },
     );

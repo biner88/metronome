@@ -25,7 +25,8 @@ abstract class MetronomePlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  final StreamController<int> tickController = StreamController<int>.broadcast();
+  final StreamController<int> tickController =
+      StreamController<int>.broadcast();
 
   Future<void> init(
     String mainPath, {

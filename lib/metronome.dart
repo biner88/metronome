@@ -84,7 +84,8 @@ class Metronome {
     String mainPath = '',
     String accentedPath = '',
   }) async {
-    return MetronomePlatform.instance.setAudioFile(mainPath: mainPath, accentedPath: accentedPath);
+    return MetronomePlatform.instance
+        .setAudioFile(mainPath: mainPath, accentedPath: accentedPath);
   }
 
   ///set the bpm of the metronome
