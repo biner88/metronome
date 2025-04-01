@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Fix multi-package support [#20](https://github.com/biner88/metronome/issues/20)
+
 ## 2.0.1
 
 * Fix pub points

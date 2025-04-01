@@ -245,7 +245,7 @@ class MethodChannelMetronome extends MetronomePlatform {
   }
 
   Future<Uint8List> loadFileBytes(String filePath) async {
-    if (filePath.startsWith('assets/')) {
+    if (!filePath.startsWith('/')) {
       ByteData data = await rootBundle.load(filePath);
       return data.buffer.asUint8List();
     } else {
