@@ -1,29 +1,22 @@
 PODS:
   - FlutterMacOS (1.0.0)
-  - metronome (1.0.7):
-    - Flutter
-    - FlutterMacOS
-  - path_provider_foundation (0.0.1):
+  - metronome (2.0.1):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
   - metronome (from `Flutter/ephemeral/.symlinks/plugins/metronome/darwin`)
-  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
 
 EXTERNAL SOURCES:
   FlutterMacOS:
     :path: Flutter/ephemeral
   metronome:
     :path: Flutter/ephemeral/.symlinks/plugins/metronome/darwin
-  path_provider_foundation:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
 
 SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  metronome: e8e61647127088e869db8fe9512554ec77382927
-  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  metronome: 2a277ef51a3d1eef7c38807bcb2632be40e3bf8d
 
 PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
 

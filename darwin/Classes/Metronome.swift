@@ -143,7 +143,7 @@ class Metronome {
     public func enableTickCallback(_eventTickSink: EventTickHandler) {
         self.eventTick = _eventTickSink
     }
-  
+#if os(iOS)
     private func setupNotifications() {
         NotificationCenter.default.addObserver(
             forName: AVAudioSession.interruptionNotification,
@@ -172,9 +172,9 @@ class Metronome {
         }
         if !self.audioEngine.isRunning {
             do {
-                 audioPlayerNode.stop()
+                audioPlayerNode.stop()
                 try audioEngine.start()
-                 audioPlayerNode.play()
+                audioPlayerNode.play()
             } catch {
                 print("Failed to start audio engine: \(error.localizedDescription)")
             }
@@ -183,6 +183,7 @@ class Metronome {
             play()
         }
     }
+#endif
     /// Generate buffer with accents based on time signature
     private func generateBuffer() -> AVAudioPCMBuffer {
         audioFileMain.framePosition = 0
