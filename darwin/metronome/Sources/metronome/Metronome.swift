@@ -35,7 +35,7 @@ class Metronome {
             try audioSession.setCategory(
                 .playAndRecord,
                 mode: .default,
-                options: [.allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker]
+                options: [.allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker, .mixWithOthers]
             )
             
             try audioSession.setActive(true)
@@ -170,7 +170,7 @@ class Metronome {
         if wasPlaying {
             pause()
         }
-        if !self.audioEngine.isRunning {
+        //if !self.audioEngine.isRunning {
             do {
                 audioPlayerNode.stop()
                 try audioEngine.start()
@@ -178,7 +178,7 @@ class Metronome {
             } catch {
                 print("Failed to start audio engine: \(error.localizedDescription)")
             }
-        }
+        //}
         if wasPlaying {
             play()
         }
