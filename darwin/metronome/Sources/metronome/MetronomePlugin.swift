@@ -2,7 +2,7 @@
 import Flutter
 #elseif os(macOS)
 import FlutterMacOS
-import Cocoa
+// import Cocoa
 #endif
 public class MetronomePlugin: NSObject, FlutterPlugin {
     var channel:FlutterMethodChannel?
