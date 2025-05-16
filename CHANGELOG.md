@@ -1,3 +1,7 @@
+## 2.0.4
+
+* fix(darwin): optimize audio routing change handling and application background mode
+
 ## 2.0.3
 
 * Fix problem compiling for macOS [#21](https://github.com/biner88/metronome/issues/21)
