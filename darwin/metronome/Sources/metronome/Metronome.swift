@@ -68,7 +68,15 @@ class Metronome {
     }
     /// Start the metronome.
     func play() {
-       audioBuffer = generateBuffer()
+        if !audioEngine.isRunning {
+            do {
+                try audioEngine.start()
+            } catch {
+                print("Audio engine failed to start in play(): \(error)")
+                return
+            }
+        }
+        audioBuffer = generateBuffer()
     }
 
     /// Pause the metronome.
@@ -164,23 +172,41 @@ class Metronome {
             pause()
         }
     }
-
     private func handleRouteChange(_ notification: Notification) {
+        let reasonValue = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt
+        let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue ?? 0)
+
+//        print("Audio route changed. Reason: \(String(describing: reason))")
+
         let wasPlaying = isPlaying
         if wasPlaying {
             pause()
         }
-        if !self.audioEngine.isRunning {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             do {
-                audioPlayerNode.stop()
-                try audioEngine.start()
-                audioPlayerNode.play()
+                let session = AVAudioSession.sharedInstance()
+                
+                let outputs = session.currentRoute.outputs
+//                print("Current audio outputs: \(outputs.map { $0.portType.rawValue })")
+
+                self.audioPlayerNode.stop()
+                self.audioEngine.stop()
+                self.audioEngine.reset()
+
+                do {
+                    try self.audioEngine.start()
+//                    print("Audio engine restarted successfully.")
+                } catch {
+                    print("Audio engine failed to restart: \(error.localizedDescription)")
+                }
+
+                if wasPlaying {
+                    self.play()
+                }
             } catch {
-                print("Failed to start audio engine: \(error.localizedDescription)")
+                print("Failed to handle audio route change: \(error.localizedDescription)")
             }
-        }
-        if wasPlaying {
-            play()
         }
     }
 #endif
