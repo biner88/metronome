@@ -1,3 +1,6 @@
+## 2.0.5
+* Added a temporary `isInitialized` getter in Metronome class to check whether the metronome has been initialized or not
+
 ## 2.0.4
 
 * fix(darwin): optimize audio routing change handling and application background mode
