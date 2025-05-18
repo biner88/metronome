@@ -9,7 +9,8 @@ class Metronome {
   }
   Metronome._internal();
   final MetronomePlatform _platform = MetronomePlatform.instance;
-  bool isInitialized = false;
+  bool get isInitialized => _initialized;
+  bool _initialized = false;
 
   /// ```
   /// metronome.tickStream.listen(
@@ -48,10 +49,10 @@ class Metronome {
         timeSignature: timeSignature,
         sampleRate: sampleRate,
       );
-      isInitialized = true;
+      _initialized = true;
       return;
     } catch (err) {
-      isInitialized = false;
+      _initialized = false;
       rethrow;
     }
   }
@@ -88,10 +89,7 @@ class Metronome {
   }
 
   ///set the audio file of the metronome
-  Future<void> setAudioFile({
-    String mainPath = '',
-    String accentedPath = '',
-  }) async {
+  Future<void> setAudioFile({String mainPath = '', String accentedPath = ''}) async {
     return MetronomePlatform.instance.setAudioFile(mainPath: mainPath, accentedPath: accentedPath);
   }
 
@@ -119,7 +117,7 @@ class Metronome {
 
   ///destroy the metronome
   Future<void> destroy() async {
-    isInitialized = false;
+    _initialized = false;
     return MetronomePlatform.instance.destroy();
   }
 
