@@ -183,7 +183,7 @@ class Metronome {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             do {
-                let session = AVAudioSession.sharedInstance()
+                // let session = AVAudioSession.sharedInstance()
                 // let outputs = session.currentRoute.outputs
                 // print("Current audio outputs: \(outputs.map { $0.portType.rawValue })")
                 self.audioPlayerNode.stop()
