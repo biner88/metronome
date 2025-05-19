@@ -89,6 +89,15 @@ Get play state
 metronome.isPlaying();
 ```
 
+### isInitialized
+
+Getter that returns true if the metronome has completed initialization. After `init` is called.
+Not platform dependant.
+
+```dart
+metronome.isInitialized;
+```
+
 ### setAudioFile
 
 main, accent can be set at the same time or individually
@@ -118,3 +127,5 @@ metronome.tickStream.listen((int tick) {
   print("tick: $tick");
 });
 ```
+
+
