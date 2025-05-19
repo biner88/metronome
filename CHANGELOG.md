@@ -1,13 +1,19 @@
+## 2.0.6
+
+* Fix(iOS): when third-party audio software plays sound, it does not interrupt the playback. The metronome also works well. [#25](https://github.com/biner88/metronome/pull/25)
+
 ## 2.0.5
-* Added a temporary `isInitialized` getter in Metronome class to check whether the metronome has been initialized or not
+
+* Added(iOS): a temporary `isInitialized` getter in Metronome class to check whether the metronome has been initialized or not [#24](https://github.com/biner88/metronome/pull/24)
 
 ## 2.0.4
 
-* fix(darwin): optimize audio routing change handling and application background mode
+* Fix(iOS): optimize audio routing change handling and application background mode [#15]https://github.com/biner88/metronome/issues/15)
+* Added(iOS): Swift Package Manager support
 
 ## 2.0.3
 
-* Fix problem compiling for macOS [#21](https://github.com/biner88/metronome/issues/21)
+* Fix(MacOS): problem compiling for macOS [#21](https://github.com/biner88/metronome/issues/21)
 
 ## 2.0.2
 
