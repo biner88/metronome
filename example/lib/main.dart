@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
       timeSignature: timeSignature,
       sampleRate: 44100,
     );
+    print("init:${_metronomePlugin.isInitialized}");
     _metronomePlugin.tickStream.listen(
       (int tick) {
         currentTick = tick;
