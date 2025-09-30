@@ -68,6 +68,10 @@ public class Metronome {
         if (!isPlaying()) {
             updated = true;
             onTick();
+            // Send immediate tick event to match iOS behavior
+            if (eventTickSink != null) {
+                eventTickSink.success(0);  // Send tick 0 immediately
+            }
             audioTrack.play();
             startMetronome();
         }
