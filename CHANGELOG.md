@@ -1,3 +1,7 @@
+## 2.0.7
+
+* Fix 1-beat offset in Android for tick callback [#28](https://github.com/biner88/metronome/pull/28)
+
 ## 2.0.6
 
 * Fix(iOS): when third-party audio software plays sound, it does not interrupt the playback. The metronome also works well. [#25](https://github.com/biner88/metronome/pull/25)
