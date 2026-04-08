@@ -66,6 +66,11 @@ class Metronome {
         setupNotifications()
 #endif
     }
+    private func reconnectPlayerNode() {
+        audioEngine.disconnectNodeOutput(audioPlayerNode)
+        audioEngine.connect(audioPlayerNode, to: mixerNode, format: audioFileMain.processingFormat)
+    }
+
     /// Start the metronome.
     func play() {
         if !audioEngine.isRunning {
@@ -116,18 +121,21 @@ class Metronome {
     }
     
     func setAudioFile(mainFileBytes: Data, accentedFileBytes: Data) {
+        if mainFileBytes.isEmpty && accentedFileBytes.isEmpty { return }
+
+        let wasPlaying = isPlaying
+        if wasPlaying { stop() }
+
         if !mainFileBytes.isEmpty {
             audioFileMain = try! AVAudioFile(fromData: mainFileBytes)
         }
         if !accentedFileBytes.isEmpty {
             audioFileAccented = try! AVAudioFile(fromData: accentedFileBytes)
         }
-        if !mainFileBytes.isEmpty || !accentedFileBytes.isEmpty {
-            if isPlaying {
-                pause()
-                play()
-            }
-        }
+
+        reconnectPlayerNode()
+
+        if wasPlaying { play() }
     }
     
     var getTimeSignature: Int {
@@ -173,34 +181,26 @@ class Metronome {
         }
     }
     private func handleRouteChange(_ notification: Notification) {
-        // let reasonValue = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt
-        // let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue ?? 0)
-        // print("Audio route changed. Reason: \(String(describing: reason))")
         let wasPlaying = isPlaying
         if wasPlaying {
-            pause()
+            self.stop()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.audioPlayerNode.stop()
+            self.audioEngine.stop()
+            self.audioEngine.reset()
+
+            self.reconnectPlayerNode()
+
             do {
-                // let session = AVAudioSession.sharedInstance()
-                // let outputs = session.currentRoute.outputs
-                // print("Current audio outputs: \(outputs.map { $0.portType.rawValue })")
-                self.audioPlayerNode.stop()
-                self.audioEngine.stop()
-                self.audioEngine.reset()
-
-                do {
-                    try self.audioEngine.start()
-                } catch {
-                    print("Audio engine failed to restart: \(error.localizedDescription)")
-                }
-
-                if wasPlaying {
-                    self.play()
-                }
+                try self.audioEngine.start()
             } catch {
-                print("Failed to handle audio route change: \(error.localizedDescription)")
+                print("Audio engine failed to restart: \(error.localizedDescription)")
+            }
+
+            if wasPlaying {
+                self.play()
             }
         }
     }
