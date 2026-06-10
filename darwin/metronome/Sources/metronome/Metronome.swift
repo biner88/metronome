@@ -67,7 +67,9 @@ class Metronome {
 #endif
     }
     private func reconnectPlayerNode() {
-        audioEngine.disconnectNodeOutput(audioPlayerNode)
+        if !audioEngine.outputConnectionPoints(for: audioPlayerNode, outputBus: 0).isEmpty {
+            audioEngine.disconnectNodeOutput(audioPlayerNode)
+        }
         audioEngine.connect(audioPlayerNode, to: mixerNode, format: audioFileMain.processingFormat)
     }
 
