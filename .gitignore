@@ -34,3 +34,4 @@ example/windows/.vs/
 .vs/
 .metadata
 darwin/metronome/.swiftpm/*
+darwin/metronome/.build/
