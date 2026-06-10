@@ -193,7 +193,9 @@ class Metronome {
             self.audioEngine.stop()
             self.audioEngine.reset()
 
-            self.reconnectPlayerNode()
+            // reset() clears all connections, so connect directly without disconnecting first.
+            // Calling outputConnectionPointsForNode after reset() throws an NSException.
+            self.audioEngine.connect(self.audioPlayerNode, to: self.mixerNode, format: self.audioFileMain.processingFormat)
 
             do {
                 try self.audioEngine.start()
