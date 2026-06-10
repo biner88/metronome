@@ -187,15 +187,9 @@ class Metronome {
         if wasPlaying {
             self.stop()
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.audioPlayerNode.stop()
-            self.audioEngine.stop()
-            self.audioEngine.reset()
 
-            // reset() clears all connections, so connect directly without disconnecting first.
-            // Calling outputConnectionPointsForNode after reset() throws an NSException.
-            self.audioEngine.connect(self.audioPlayerNode, to: self.mixerNode, format: self.audioFileMain.processingFormat)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.audioEngine.stop()
 
             do {
                 try self.audioEngine.start()
