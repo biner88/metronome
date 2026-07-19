@@ -1,3 +1,11 @@
+## 2.0.9
+
+* Fix crashes in handleRouteChange during audio engine reset. [#34](https://github.com/biner88/metronome/pull/36)
+
+## 2.0.8
+
+* Fix: Metronome audio handling. [#33](https://github.com/biner88/metronome/pull/33)
+
 ## 2.0.7
 
 * Fix 1-beat offset in Android for tick callback [#28](https://github.com/biner88/metronome/pull/28)

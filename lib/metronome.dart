@@ -122,7 +122,4 @@ class Metronome {
     _initialized = false;
     return MetronomePlatform.instance.destroy();
   }
-
-  @Deprecated('use tickStream instead')
-  void onListenTick(onEvent) {}
 }
