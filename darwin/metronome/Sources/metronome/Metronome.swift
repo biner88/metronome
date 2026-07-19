@@ -67,7 +67,9 @@ class Metronome {
 #endif
     }
     private func reconnectPlayerNode() {
-        audioEngine.disconnectNodeOutput(audioPlayerNode)
+        if !audioEngine.outputConnectionPoints(for: audioPlayerNode, outputBus: 0).isEmpty {
+            audioEngine.disconnectNodeOutput(audioPlayerNode)
+        }
         audioEngine.connect(audioPlayerNode, to: mixerNode, format: audioFileMain.processingFormat)
     }
 
@@ -185,13 +187,9 @@ class Metronome {
         if wasPlaying {
             self.stop()
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.audioPlayerNode.stop()
-            self.audioEngine.stop()
-            self.audioEngine.reset()
 
-            self.reconnectPlayerNode()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.audioEngine.stop()
 
             do {
                 try self.audioEngine.start()
