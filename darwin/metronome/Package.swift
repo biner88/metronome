@@ -7,7 +7,7 @@ let package = Package(
     name: "metronome",
     platforms: [
         .iOS("12.0"),
-        .macOS("10.14"),
+        .macOS("10.15"),
     ],
     products: [
         .library(name: "metronome", targets: ["metronome"])

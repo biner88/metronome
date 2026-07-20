@@ -1,3 +1,7 @@
+## 2.0.10
+
+* chore(platform): upgrade macOS deployment target to 10.15
+
 ## 2.0.9
 
 * Fix crashes in handleRouteChange during audio engine reset. [#34](https://github.com/biner88/metronome/pull/36)
