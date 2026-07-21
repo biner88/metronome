@@ -13,7 +13,7 @@ Metronome
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Sumsg' => 'sumsg@outlook.com' }
   s.source           = { :path => '.' }
-  s.source_files = '.../**/*.swift'
+  s.source_files = 'metronome/Sources/metronome/**/*.swift'
   s.ios.dependency 'Flutter'
   s.osx.dependency 'FlutterMacOS'
   s.ios.deployment_target = '13.0'

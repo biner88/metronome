@@ -1,3 +1,7 @@
+## 2.0.12
+
+* Fix the source_files path configuration in darwin/metronome.podspec.
+
 ## 2.0.11
 
 * chore(platform): upgrade iOS deployment target to 13.0
