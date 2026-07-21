@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'metronome'
-  s.version          = '2.0.6'
+  s.version          = '2.0.11'
   s.summary          = 'Metronome'
   s.description      = <<-DESC
 Metronome
@@ -16,7 +16,7 @@ Metronome
   s.source_files = '.../**/*.swift'
   s.ios.dependency 'Flutter'
   s.osx.dependency 'FlutterMacOS'
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '13.0'
   s.osx.deployment_target = '10.15'
   s.ios.xcconfig = {
     'LIBRARY_SEARCH_PATHS' => '$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)/ $(SDKROOT)/usr/lib/swift',

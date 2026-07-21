@@ -1,3 +1,7 @@
+## 2.0.11
+
+* chore(platform): upgrade iOS deployment target to 13.0
+
 ## 2.0.10
 
 * chore(platform): upgrade macOS deployment target to 10.15
